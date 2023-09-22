@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#define TAM_BUFFER 5
+#define TAM_BUFFER 100
 
 typedef struct {
   char* buffer;
