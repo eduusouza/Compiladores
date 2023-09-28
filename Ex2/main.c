@@ -6,7 +6,6 @@ int main(int argc, char *argv[]){
   char c;
   tipoBuffer info;
   info.flag = 0;
-  info.line = 0;
   info.index = 0;
 
   if (argc != 2){
