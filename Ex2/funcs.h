@@ -7,7 +7,6 @@
 typedef struct {
   char* buffer;
   int index;
-  int line;
   FILE *arquivo;
   int flag;
 } tipoBuffer;
