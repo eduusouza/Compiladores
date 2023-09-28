@@ -9,26 +9,24 @@ void deallocate_buffer(tipoBuffer *info){
 }
 
 char get_next_char(tipoBuffer *info){
-  char c;
-  int length, i;
-
+  
+  int length = strlen(info->buffer);
+  int endCondition = 0;
+  
   if (info->flag == 0){
-    if (fgets(info->buffer, TAM_BUFFER, info->arquivo))
+    char* endFile = fgets(info->buffer, TAM_BUFFER, info->arquivo);
     info->flag = 1;
+    info->index = 0;
+
+    if(endFile == NULL){
+      return EOF;
+    }    
   }
-  
-  length = strlen(info->buffer);
-  
+
   if (info->index == length-1){
     info->flag = 0;
   }
 
-  c = info->buffer[(info->index)];
-  info->index++;
-  
-  if (c == '\n'){
-    info->line++;
-  }
-  
-  return c;
+  info->index++;  
+  return info->buffer[(info->index-1)];
 }

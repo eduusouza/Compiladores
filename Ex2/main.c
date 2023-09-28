@@ -25,7 +25,7 @@ int main(int argc, char *argv[]){
   while ((c = get_next_char(&info)) != EOF){
     printf("%c", c);
   }
-    
+  
   deallocate_buffer(&info);
   
   fclose(info.arquivo);
