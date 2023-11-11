@@ -22,7 +22,7 @@ int main(int argc, char *argv[]){
   allocate_buffer(&info);
   
   while ((c = get_next_char(&info)) != EOF){
-    printf("%c", c);
+    printf("%c", c);  
   }
   
   deallocate_buffer(&info);

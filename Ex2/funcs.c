@@ -10,9 +10,6 @@ void deallocate_buffer(tipoBuffer *info){
 
 char get_next_char(tipoBuffer *info){
   
-  int length = strlen(info->buffer);
-  int endCondition = 0;
-  
   if (info->flag == 0){
     char* endFile = fgets(info->buffer, TAM_BUFFER, info->arquivo);
     info->flag = 1;
@@ -20,8 +17,15 @@ char get_next_char(tipoBuffer *info){
 
     if(endFile == NULL){
       return EOF;
-    }    
+    }  
+
+    if (info->buffer[0] == '\n'){
+      info->flag = 0;
+      return '\n';
+    }
   }
+
+  int length = strlen(info->buffer);
 
   if (info->index == length-1){
     info->flag = 0;
