@@ -7,7 +7,9 @@ int main(int argc, char *argv[]){
     Token token;
     info.flag = 0;
     info.index = 0;
-    info.linha = 0;
+    info.linha = 1;
+    token.endOfFile = 0;
+    token.linha = 1;
 
     if (argc != 2){
         printf("Numero de parametros esta errado\n");
@@ -21,16 +23,14 @@ int main(int argc, char *argv[]){
     }
 
     allocateBuffer(&info);
-    allocateToken(&token);
     
-    token = getNextToken(&info, &token);
     while (token.endOfFile != 1){
-        printf("Linha: %d, Lexema: %s, TOKEN: %d", token.linha, token.lexema, token.type);
         token = getNextToken(&info, &token);
+        printf("Linha: %d, Lexema: %s, Token: %d\n", token.linha, token.lexema, token.type);
+        deallocateToken(&token);
     } 
     
-    deallocateBuffer(&info);
-    deallocateToken(&token);    
+    deallocateBuffer(&info);    
 
     fclose(info.arquivo);
     return 0;

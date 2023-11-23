@@ -41,11 +41,10 @@ char getNextChar(tipoBuffer *info){
         info->flag = 0;
     }
 
+    info->index++;
     if (info->buffer[info->index-1] == '\n'){
         info->linha++;
-    }
-
-    info->index++;  
+    }      
     return info->buffer[(info->index-1)];
 }
 
@@ -97,23 +96,30 @@ Token getNextToken(tipoBuffer *info, Token *token){
     int estado = 0, novoEstado, tipoC, erro = 0, index_lexema = 0;
     char c;
 
+    allocateToken(token);
+
     c = getNextChar(info);
     tipoC = cType(c);
     token->lexema[index_lexema] = c;
     index_lexema += 1;
     token->endOfFile = 0;
     
-    if(c == EOF){
-        token->endOfFile = 1;
-        return *token;
-    }
-    
     while ((!aceita[estado]) && (!erro)){
 
            
         //caso o tipo do caracter não se encaixar em nenhum previsto
         if (tipoC == 3){
-            erro = 1;
+            if(c == ' '){
+                break;
+            } else if(c == '\n'){
+                break;
+            } else if(c == '\t'){
+                break;
+            } else if(c == '\r'){
+                break;
+            } else {
+                erro = 1;
+            }
             break;        
         //caso o tipo se encaixar como simbolo, será necessário tratar cada caso
         }else if(tipoC == 2){
@@ -234,16 +240,19 @@ Token getNextToken(tipoBuffer *info, Token *token){
         if(avance[estado][tipoC] == 1){
             c = getNextChar(info);
             tipoC = cType(c);
-            token->lexema[index_lexema] = c;
-            index_lexema += 1;
+            if ((tipoC != 3) && (c != EOF)){
+                token->linha = info->linha;
+                token->lexema[index_lexema] = c;
+                index_lexema += 1;
+            } else if (c == EOF){
+                token->endOfFile = 1;
+                return *token;
+            }
         }
-        estado = novoEstado;            
+        estado = novoEstado;                    
     }
-
     if(erro == 1){
-        printf("TRATAR");
+        printf("Erro lexico: %s, Linha: %d\n", token->lexema, token->linha);
     } 
-
-    token->linha = info->linha;
     return *token;
 }
