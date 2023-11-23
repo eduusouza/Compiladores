@@ -3,12 +3,12 @@
 #include <ctype.h>
 #include <string.h>
 #define TAM_BUFFER 100
+#define TAM_LEXEMA 64
 
-enum tokens {IF = 1, ELSE, INT, RETURN, VOID, WHILE, WRITE, SOMA, SUB, MULT, DIV, MENOR, MENOR_IGUAL,
+enum Tokens {IF, ELSE, INT, RETURN, VOID, WHILE, WRITE, SOMA, SUB, MULT, DIV, MENOR, MENOR_IGUAL,
             MAIOR, MAIOR_IGUAL, ATRIB, DIF, IGUAL, PONTO_VIRG, VIRG, ABRE_PARENT, FECHA_PARENT, ABRE_COLCH, FECHA_COLCH,
             ABRE_CHAVES, FECHA_CHAVES, NUM, ID};
 
-char simbolos[] = {'+', '-', '*', '/', '<', '>', '=', '!', ';', ',', '(', ')', '[', ']', '{', '}'};
 
 typedef struct{
     char *buffer;
@@ -22,16 +22,23 @@ typedef struct{
     int type;
     char *lexema;
     int linha;
+    int endOfFile;
 } Token;
 
-void allocate_buffer(tipoBuffer *);
+void allocateBuffer(tipoBuffer *);
 
-void deallocate_buffer(tipoBuffer *);
+void deallocateBuffer(tipoBuffer *);
 
-char get_next_char(tipoBuffer *);
+void allocateToken(Token *);
+
+void deallocateToken(Token *);
+
+char getNextChar(tipoBuffer *);
 
 int isSymbol(char);
 
 int cType(char);
 
-Token* inputToken(int, char*, int);
+Token getNextToken(tipoBuffer *, Token *);
+
+char peekNextChar(tipoBuffer *);
