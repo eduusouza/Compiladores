@@ -49,8 +49,6 @@ void deallocateToken(Token *);
 
 char getNextChar(tipoBuffer *);
 
-int isSymbol(char);
-
 int cType(char);
 
 Token getNextToken(tipoBuffer *, Token *);
