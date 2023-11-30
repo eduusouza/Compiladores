@@ -166,7 +166,7 @@ Token getNextToken(tipoBuffer *info, Token *token){
                             index_lexema++;
                             break;
 
-                        case '/':
+                        case '/':                               //Se for barra, não consome o caracter e avança de estado
                             estado = 6;                            
                             break;
 
@@ -299,30 +299,30 @@ Token getNextToken(tipoBuffer *info, Token *token){
                 }
                 break;
 
-            case 3:                        //Caso c seja um simbolo, ele pode ser um operador ou um delimitador
-                token->type = SOMA;
+            case 3:                        
+                token->type = SOMA;         //Atualiza o tipo de token e finaliza o lexema
                 token->linha = info->linha;
                 estado = -1;
                 break;
             
             case 4:
-                token->type = SUB;
+                token->type = SUB;          //Atualiza o tipo de token e finaliza o lexema
                 token->linha = info->linha;
                 estado = -1;
                 break;
 
             case 5:
-                token->type = MULT;
+                token->type = MULT;         //Atualiza o tipo de token e finaliza o lexema
                 token->linha = info->linha;
                 estado = -1;
                 break;
 
-            case 6:
+            case 6:                         //Caso c seja uma barra, ele pode ser um operador de divisão ou um comentário
                 aux = getNextChar(info);
                 if (aux == '*'){
                     estado = 7;
                 } else {
-                    token->lexema[index_lexema] = c;
+                    token->lexema[index_lexema] = c;        //Caso não seja um comentário, devolve o caracter para o buffer e finaliza o lexema
                     index_lexema++;
                     ungetChar(info);
                     token->type = DIV;
@@ -332,7 +332,7 @@ Token getNextToken(tipoBuffer *info, Token *token){
                 break;
             
             case 7:
-                while((c = getNextChar(info)) != '*'){
+                while((c = getNextChar(info)) != '*'){     //Consome todos caracteres até encontrar um asterisco
                     if (c == EOF){
                         printf("Erro lexico: comentario nao fechado, Linha: %d\n", info->linha);
                         break;
@@ -341,8 +341,8 @@ Token getNextToken(tipoBuffer *info, Token *token){
                 estado = 8;
                 break;
             
-            case 8:
-                c = getNextChar(info);
+            case 8:                          //Caso c seja um asterisco, ele pode ser o final de um comentário ou não
+                c = getNextChar(info);         
                 if (c == '/'){
                     estado = -1;
                 } else {
@@ -351,7 +351,7 @@ Token getNextToken(tipoBuffer *info, Token *token){
                 break;
 
             case 9:
-                c = getNextChar(info);
+                c = getNextChar(info);      //Caso c seja um menor, ele pode ser um operador de menor ou menor igual
                 if (c == '='){
                     token->lexema[index_lexema] = c;
                     index_lexema++;
@@ -367,7 +367,7 @@ Token getNextToken(tipoBuffer *info, Token *token){
                 break;
 
             case 10:
-                c = getNextChar(info);
+                c = getNextChar(info);               //Caso c seja um maior, ele pode ser um operador de maior ou maior igual
                 if (c == '='){
                     token->lexema[index_lexema] = c;
                     index_lexema++;
@@ -382,8 +382,8 @@ Token getNextToken(tipoBuffer *info, Token *token){
                 }                
                 break;
 
-            case 11:
-                c = getNextChar(info);
+            case 11:           
+                c = getNextChar(info);                //Caso c seja um igual, ele pode ser um operador de igual ou de atribuição
                 if (c == '='){
                     token->lexema[index_lexema] = c;
                     index_lexema++;
@@ -398,7 +398,7 @@ Token getNextToken(tipoBuffer *info, Token *token){
                 }
                 break;
 
-            case 12:
+            case 12:                                //Caso c seja um exclamação, ele pode ser um operador de diferente ou não
                 c = getNextChar(info);
                 if (c == '='){
                     token->lexema[index_lexema] = c;
