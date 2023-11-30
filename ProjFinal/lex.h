@@ -41,4 +41,4 @@ int cType(char);
 
 Token getNextToken(tipoBuffer *, Token *);
 
-char peekNextChar(tipoBuffer *);
+void ungetChar(tipoBuffer *);
