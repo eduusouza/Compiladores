@@ -76,11 +76,12 @@ int cType(char c){
 
 Token getNextToken(tipoBuffer *info, Token *token){
 
-    int estado = 0, tipoC, erro = 0, index_lexema = 0;
+    int estado = 0, tipoC, index_lexema = 0;
     char c, aux;
 
     allocateToken(token);
     token->endOfFile = 0;
+    token->validacao = 0;
     
     while (estado != -1){
 
@@ -111,8 +112,10 @@ Token getNextToken(tipoBuffer *info, Token *token){
                     } else if(c == '\r'){
                         break;
                     } else {                  //Caso c seja diferente dos caracteres acima, ele não pertence a linguagem
-                        erro = 1;
+                        token->validacao = 1;
                         estado = -1;
+                        token->lexema[index_lexema] = c;
+                        index_lexema++; 
                         break;
                     }
                 }
@@ -148,7 +151,7 @@ Token getNextToken(tipoBuffer *info, Token *token){
                 }
                 break;
 
-            case 3:
+            case 3:                        //Caso c seja um simbolo, ele pode ser um operador ou um delimitador
                 switch(c){
                     case '+':
                         token->type = SOMA;
@@ -241,12 +244,6 @@ Token getNextToken(tipoBuffer *info, Token *token){
 
     if(c == EOF){      //Caso c seja o fim do arquivo, ele é ignorado e o token é finalizado
         token->endOfFile = 1;
-    }
-
-    if(erro == 1){
-        token->lexema[index_lexema] = c;
-        index_lexema++; 
-        printf("Erro lexico: %s, Linha: %d\n", token->lexema, token->linha);
-    } 
+    }    
     return *token;
 }

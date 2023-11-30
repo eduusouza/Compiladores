@@ -23,6 +23,7 @@ typedef struct{
     char *lexema;
     int linha;
     int endOfFile;
+    int validacao;
 } Token;
 
 void allocateBuffer(tipoBuffer *);

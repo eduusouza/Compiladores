@@ -26,7 +26,11 @@ int main(int argc, char *argv[]){
     
     while (token.endOfFile != 1){
         token = getNextToken(&info, &token);
-        printf("Linha: %d, Lexema: %s, Token: %d\n", token.linha, token.lexema, token.type);
+        if (token.validacao == 1){
+            printf("Erro lexico: %s, Linha: %d\n", token.lexema, token.linha);
+        } else {
+            printf("Linha: %d, Lexema: %s, Token: %d\n", token.linha, token.lexema, token.type);
+        }
         deallocateToken(&token);
     } 
     
