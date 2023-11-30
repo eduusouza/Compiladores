@@ -256,6 +256,7 @@ Token getNextToken(tipoBuffer *info, Token *token){
                             estado = -1;
                             token->lexema[index_lexema] = c;
                             index_lexema++; 
+                            token->linha = info->linha;
                             break;
                         }
                         break;
