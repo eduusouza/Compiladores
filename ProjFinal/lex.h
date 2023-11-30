@@ -4,6 +4,7 @@
 #include <string.h>
 #define TAM_BUFFER 100
 #define TAM_LEXEMA 64
+#define TAM_THASH 700
 
 enum Tokens {IF, ELSE, INT, RETURN, VOID, WHILE, WRITE, SOMA, SUB, MULT, DIV, MENOR, MENOR_IGUAL,
             MAIOR, MAIOR_IGUAL, ATRIB, DIF, IGUAL, PONTO_VIRG, VIRG, ABRE_PARENT, FECHA_PARENT, ABRE_COLCH, FECHA_COLCH,
@@ -25,6 +26,18 @@ typedef struct{
     int endOfFile;
     int validacao;
 } Token;
+
+typedef struct HNode {
+    char key[50];
+    int value;
+    struct HNode* next;
+} HNode;
+
+int hash(char* key);
+
+void insertTHash(HNode *[], char *, int);
+
+int searchTHash(HNode *[], char *);
 
 void allocateBuffer(tipoBuffer *);
 
