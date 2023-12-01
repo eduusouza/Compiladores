@@ -130,6 +130,7 @@ Token getNextToken(tipoBuffer *info, Token *token){
     allocateToken(token);
     token->endOfFile = 0;
     token->validacao = 0;
+    memset(token->lexema, '\0', sizeof(token->lexema));
     
     while (estado != -1){
 
@@ -334,7 +335,8 @@ Token getNextToken(tipoBuffer *info, Token *token){
             case 7:
                 while((c = getNextChar(info)) != '*'){     //Consome todos caracteres até encontrar um asterisco
                     if (c == EOF){
-                        printf("Erro lexico: comentario nao fechado, Linha: %d\n", info->linha);
+                        printf("Erro lexico: comentario nao fechado.\n");
+                        exit(1);
                         break;
                     }
                 }

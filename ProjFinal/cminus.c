@@ -26,6 +26,10 @@ int main(int argc, char *argv[]){
     
     while (token.endOfFile != 1){
         token = getNextToken(&info, &token);
+        if (token.endOfFile == 1){
+            break;
+        }
+        
         if (token.validacao == 1){
             printf("Erro lexico: %s, Linha: %d\n", token.lexema, token.linha);
         } else {
