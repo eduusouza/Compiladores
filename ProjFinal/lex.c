@@ -476,10 +476,3 @@ Token getNextToken(tipoBuffer *info, Token *token){
     }    
     return *token;
 }
-
-/*
-
-Bug string lexema com caracter a mais
-Imprimir valor dos Tokens enum
-
-*/
