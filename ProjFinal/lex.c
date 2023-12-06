@@ -1,22 +1,28 @@
 #include "lex.h"
 
+//Função que aloca memória para o buffer
 void allocateBuffer(tipoBuffer *info){
     info->buffer = malloc(sizeof(char *) * TAM_BUFFER);
 }
 
+//Função que desaloca memória para o buffer
 void deallocateBuffer(tipoBuffer *info){
     free(info->buffer);
 }
 
+//Função que aloca memória para o token
 void allocateToken(Token *token){
     token->lexema = malloc(sizeof(Token));
 }
 
+//Função que desaloca memória para o token
 void deallocateToken(Token *token){
     free(token->lexema);
 }
 
+//Função que calcula o hash de uma string
 int hash(char* key) {
+
     int hash = 0;
     for (int i = 0; key[i] != '\0'; i++) {
         
@@ -26,7 +32,7 @@ int hash(char* key) {
     return (hash);
 }
 
-
+//Função que insere um elemento na tabela hash
 void insertTHash(HNode* table[], char* key, int value) {
 
     int index = hash(key);
@@ -44,25 +50,30 @@ void insertTHash(HNode* table[], char* key, int value) {
         newNode->next = table[index];
         table[index] = newNode;
 
-        printf("Colisao %d\n", index);
+        // printf("Colisao %d\n", index);
     }
 }
 
+//Função que busca um elemento na tabela hash
 int searchTHash(HNode* table[], char* key) {
+    
     int index = hash(key);
 
     HNode* current = table[index];
     
     while (current != NULL) {
+        
         if (strcmp(current->key, key) == 0) {
             return current->value;
         }
+        
         current = current->next;
     }
-
+    
     return -1;
 }
 
+//Função que retorna o próximo caracter do buffer
 char getNextChar(tipoBuffer *info){
 
     if (info->flag == 0){
@@ -98,381 +109,180 @@ void ungetChar(tipoBuffer *info){
     info->index--;
 }
 
-int cType(char c){
-    if (isalpha(c)){
-        return 0;
-    } else if (isdigit(c)){
+
+//Função que retorna a coluna do caracter na matriz de transição
+int classificaCaracter(char c, HNode *auxHT[]){ 
+
+    if (isalpha(c)){              //Caso c seja uma letra, ele pode ser um identificador ou uma palavra reservada
+        return 0; 
+    } else if (isdigit(c)){       //Caso c seja um digito, ele pode ser um numero
         return 1;
     } else {
-        return 2;
-    } 
+        char ch[2] = {c, '\0'};  //Caso c seja um caracter especial, ele pode ser um simbolo ou um operador
+        return searchTHash(auxHT, ch);
+    }
 }
 
-Token getNextToken(tipoBuffer *info, Token *token){
+//Função que retorna o próximo token
+Token getNextToken(tipoBuffer *info, Token *token, HNode* reservadasHT[], HNode* auxHT[]){
 
-    int estado = 0, tipoC, index_lexema = 0;
+    int estado = 0, tipoC, index_lexema;
     char c, aux;
+    
+    //Declaração da matriz de transição
+    int T[27][18]={
+        {2,1,12,4,6,10,8,15,16,17,18,19,20,21,22,23,24,25}, // 0
+        {3,1,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}, // 1
+        {2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}, // 2
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 3
+        {3,3,3,3,3,5,3,3,3,3,3,3,3,3,3,3,3,3}, // 4
+        {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}, // 5
+        {3,3,3,3,3,7,3,3,3,3,3,3,3,3,3,3,3,3}, // 6
+        {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}, // 7
+        {3,3,3,3,3,9,3,3,3,3,3,3,3,3,3,3,3,3}, // 8
+        {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}, // 9
+        {3,3,3,3,3,11,3,3,3,3,3,3,3,3,3,3,3,3}, // 10
+        {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}, // 11
+        {3,3,3,3,3,3,3,13,3,3,3,3,3,3,3,3,3,3}, // 12
+        {13,13,13,13,13,13,13,14,13,13,13,13,13,13,13,13,13,13}, // 13
+        {13,13,0,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13}, // 14
+        {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}, // 15
+        {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}, // 16
+        {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}, // 17
+        {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}, // 18
+        {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}, // 19
+        {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}, // 20
+        {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}, // 21
+        {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}, // 22
+        {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}, // 23
+        {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}, // 24
+        {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}, // 25
+        {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3} // 26
+    };
 
-    //Inicializando tabela hash
-    HNode* hashTable[TAM_THASH];
-    for (int i = 0; i < TAM_THASH; i++) {
-        hashTable[i] = NULL;
-    }
-     
-    //Inserindo palavras reservadas
-    insertTHash(hashTable, "else", ELSE);
-    insertTHash(hashTable, "if", IF);
-    insertTHash(hashTable, "int", INT);
-    insertTHash(hashTable, "return", RETURN);
-    insertTHash(hashTable, "void", VOID);
-    insertTHash(hashTable, "while", WHILE);
+    //Declaração da matriz de avanço
+    int avance[27][18] = {
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}, // 0
+        {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 1
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 2
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 3
+        {0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0}, // 4
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 5
+        {0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0}, // 6
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 7
+        {0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0}, // 8
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 9
+        {0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0}, // 10
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 11
+        {0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0}, // 12
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}, // 13
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}, // 14
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 15
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 16
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 17
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 18
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 19
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 20
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 21
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 22
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 23
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 24
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 25
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} // 26
+    };
 
-    allocateToken(token);
+    //Declaração do vetor de estados de aceitação
+    int aceita[27] = {0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+
+    int erro = 0, novoEstado, cEntrada, oldState;
     token->endOfFile = 0;
-    token->validacao = 0;
-    memset(token->lexema, '\0', sizeof(token->lexema));
-    
-    while (estado != -1){
+    token->validacao = 0;    
 
-        switch(estado){
-            case 0:
-                c = getNextChar(info);
-                tipoC = cType(c);
+    //Pegando o primeiro caracter do arquivo
+    c = getNextChar(info); 
 
-                if (tipoC == 0){              //Caso c seja uma letra, ele pode ser um identificador ou uma palavra reservada
-                    estado = 1;
-                    token->lexema[index_lexema] = c;
-                    index_lexema++;
-                } else if (tipoC == 1){       //Caso c seja um digito, ele pode ser um numero
-                    estado = 2;
-                    token->lexema[index_lexema] = c;
-                    index_lexema++;
-                } else {
-                    switch (c){               //Caso c seja um simbolo, ele pode ser um operador ou um delimitador
-                        case '+':
-                            estado = 3;
-                            token->lexema[index_lexema] = c;
-                            index_lexema++;
-                            break;
-
-                        case '-':
-                            estado = 4;
-                            token->lexema[index_lexema] = c;
-                            index_lexema++;
-                            break;
-
-                        case '*':
-                            estado = 5;
-                            token->lexema[index_lexema] = c;
-                            index_lexema++;
-                            break;
-
-                        case '/':                               //Se for barra, não consome o caracter e avança de estado
-                            estado = 6;                            
-                            break;
-
-                        case '<':
-                            estado = 9;
-                            token->lexema[index_lexema] = c;
-                            index_lexema++;
-                            break;
-                        
-                        case '>':
-                            estado = 10;
-                            token->lexema[index_lexema] = c;
-                            index_lexema++;
-                            break;
-                        
-                        case '=':
-                            estado = 11;
-                            token->lexema[index_lexema] = c;
-                            index_lexema++;
-                            break;
-                        
-                        case '!':
-                            estado = 12;
-                            token->lexema[index_lexema] = c;
-                            index_lexema++;
-                            break;
-                        
-                        case ';':
-                            estado = 13;
-                            token->lexema[index_lexema] = c;
-                            index_lexema++;
-                            break;
-                        
-                        case ',':
-                            estado = 14;
-                            token->lexema[index_lexema] = c;
-                            index_lexema++;
-                            break;
-                        
-                        case '(':
-                            estado = 15;
-                            token->lexema[index_lexema] = c;
-                            index_lexema++;
-                            break;
-                        
-                        case ')':
-                            estado = 16;
-                            token->lexema[index_lexema] = c;
-                            index_lexema++;
-                            break;
-                        
-                        case '[':
-                            estado = 17;
-                            token->lexema[index_lexema] = c;
-                            index_lexema++;
-                            break;
-                        
-                        case ']':
-                            estado = 18;
-                            token->lexema[index_lexema] = c;
-                            index_lexema++;
-                            break;
-
-                        case '{':
-                            estado = 19;
-                            token->lexema[index_lexema] = c;
-                            index_lexema++;
-                            break;
-                        
-                        case '}':
-                            estado = 20;
-                            token->lexema[index_lexema] = c;
-                            index_lexema++;
-                            break;
-                                       
-                    default:
-                        if(c == ' '){             //Caso c seja um espaço, tab, quebra de linha ou retorno de carro, ele é ignorado
-                            break;
-                        } else if(c == '\n'){
-                            break;
-                        } else if(c == '\t'){
-                            break;
-                        } else if(c == '\r'){
-                            break;
-                        } else {                  //Caso c seja diferente dos caracteres acima, ele não pertence a linguagem
-                            token->validacao = 1;
-                            estado = -1;
-                            token->lexema[index_lexema] = c;
-                            index_lexema++; 
-                            token->linha = info->linha;
-                            break;
-                        }
-                        break;
-                    }
-                }
-                break;   
-
-            case 1:
-                c = getNextChar(info);
-                tipoC = cType(c);
-                if (tipoC == 0){             //Caso ainda seja uma letra, mantem o estado atual e consome o caracter
-                    estado = 1;
-                    token->lexema[index_lexema] = c;
-                    index_lexema++;                    
-                } else {
-                    ungetChar(info);        //Caso não seja uma letra, devolve o caracter para o buffer e finaliza o lexema
-                    estado = -1;
-
-                    //Faz a busca na tabela hash para verificar se é palavra reservada
-                    int pesquisa = searchTHash(hashTable, token->lexema);
-
-                    (pesquisa != -1) ? (token->type = pesquisa) : (token->type = ID); 
-
-                    token->linha = info->linha;
-                }
-                break;
-
-            case 2:
-                c = getNextChar(info);
-                tipoC = cType(c);
-                if (tipoC == 1){             //Caso ainda seja um digito, mantem o estado atual e consome o caracter
-                    estado = 2;
-                    token->lexema[index_lexema] = c;
-                    index_lexema++;                    
-                } else {
-                    ungetChar(info);        //Caso não seja um digito, devolve o caracter para o buffer e finaliza o lexema
-                    estado = -1;
-                    token->type = NUM;
-                    token->linha = info->linha;
-                }
-                break;
-
-            case 3:                        
-                token->type = SOMA;         //Atualiza o tipo de token e finaliza o lexema
-                token->linha = info->linha;
-                estado = -1;
-                break;
-            
-            case 4:
-                token->type = SUB;          //Atualiza o tipo de token e finaliza o lexema
-                token->linha = info->linha;
-                estado = -1;
-                break;
-
-            case 5:
-                token->type = MULT;         //Atualiza o tipo de token e finaliza o lexema
-                token->linha = info->linha;
-                estado = -1;
-                break;
-
-            case 6:                         //Caso c seja uma barra, ele pode ser um operador de divisão ou um comentário
-                aux = getNextChar(info);
-                if (aux == '*'){
-                    estado = 7;
-                } else {
-                    token->lexema[index_lexema] = c;        //Caso não seja um comentário, devolve o caracter para o buffer e finaliza o lexema
-                    index_lexema++;
-                    ungetChar(info);
-                    token->type = DIV;
-                    token->linha = info->linha;
-                    estado = -1;
-                }
-                break;
-            
-            case 7:
-                while((c = getNextChar(info)) != '*'){     //Consome todos caracteres até encontrar um asterisco
-                    if (c == EOF){
-                        printf("Erro lexico: comentario nao fechado.\n");
-                        exit(1);
-                        break;
-                    }
-                }
-                estado = 8;
-                break;
-            
-            case 8:                          //Caso c seja um asterisco, ele pode ser o final de um comentário ou não
-                c = getNextChar(info);         
-                if (c == '/'){
-                    estado = -1;
-                } else {
-                    estado = 7;
-                }
-                break;
-
-            case 9:
-                c = getNextChar(info);      //Caso c seja um menor, ele pode ser um operador de menor ou menor igual
-                if (c == '='){
-                    token->lexema[index_lexema] = c;
-                    index_lexema++;
-                    token->type = MENOR_IGUAL;
-                    token->linha = info->linha;
-                    estado = -1;
-                } else {
-                    ungetChar(info);
-                    token->type = MENOR;
-                    token->linha = info->linha;
-                    estado = -1;
-                }
-                break;
-
-            case 10:
-                c = getNextChar(info);               //Caso c seja um maior, ele pode ser um operador de maior ou maior igual
-                if (c == '='){
-                    token->lexema[index_lexema] = c;
-                    index_lexema++;
-                    token->type = MAIOR_IGUAL;
-                    token->linha = info->linha;
-                    estado = -1;
-                } else {
-                    ungetChar(info);
-                    token->type = MAIOR;
-                    token->linha = info->linha;
-                    estado = -1;
-                }                
-                break;
-
-            case 11:           
-                c = getNextChar(info);                //Caso c seja um igual, ele pode ser um operador de igual ou de atribuição
-                if (c == '='){
-                    token->lexema[index_lexema] = c;
-                    index_lexema++;
-                    token->type = IGUAL;
-                    token->linha = info->linha;
-                    estado = -1;
-                } else {
-                    ungetChar(info);
-                    token->type = ATRIB;
-                    token->linha = info->linha;
-                    estado = -1;
-                }
-                break;
-
-            case 12:                                //Caso c seja um exclamação, ele pode ser um operador de diferente ou não
-                c = getNextChar(info);
-                if (c == '='){
-                    token->lexema[index_lexema] = c;
-                    index_lexema++;
-                    token->type = DIF;
-                    token->linha = info->linha;
-                    estado = -1;
-                } else {
-                    ungetChar(info);
-                    token->type = IGUAL;
-                    token->linha = info->linha;
-                    estado = -1;
-                }
-                break;
-
-            case 13:
-                token->type = PONTO_VIRG;
-                token->linha = info->linha;
-                estado = -1;
-                break;
-
-            case 14:
-                token->type = VIRG;
-                token->linha = info->linha;
-                estado = -1;
-                break;
-
-            case 15:
-                token->type = ABRE_PARENT;
-                token->linha = info->linha;
-                estado = -1;
-                break;
-    
-            case 16:
-                token->type = FECHA_PARENT;
-                token->linha = info->linha;
-                estado = -1;
-                break;
-
-            case 17:
-                token->type = ABRE_COLCH;
-                token->linha = info->linha;
-                estado = -1;
-                break;
-
-            case 18:
-                token->type = FECHA_COLCH;
-                token->linha = info->linha;
-                estado = -1;
-                break;
-
-            case 19:
-                token->type = ABRE_CHAVES;
-                token->linha = info->linha;
-                estado = -1;
-                break;
-
-            case 20:
-                token->type = FECHA_CHAVES;
-                token->linha = info->linha;
-                estado = -1;
-                break;
- 
-            default:
-                estado = -1;
-                break;       
-        }
-
+    if(c == EOF){      //Caso c seja o fim do arquivo, a flag é setada para 1
+        token->endOfFile = 1;
     }
 
-    if(c == EOF){      //Caso c seja o fim do arquivo, ele é ignorado e o token é finalizado
-        token->endOfFile = 1;
-    }    
+    //Enquanto o estado não for de aceitação, o caracter é classificado e o estado é atualizado
+    while(!aceita[estado]){
+
+        if(estado == 0){
+            index_lexema = 0;
+            memset(token->lexema, '\0', sizeof(token->lexema));        //Limpando dados do Lexema
+        }
+        
+        //Caracter é classificado
+        cEntrada = classificaCaracter(c, auxHT);
+        
+        //Caso o caracter não seja válido, é retornado um erro
+        if(cEntrada == -1){
+            
+            //Caso seja um destes caracteres especiais e esteja dentro de um comentário, retorna para o estado 13 e consome o próximo caracter
+            if((c == ' ')|| (c == '\n') || (c == '\t')|| (c == '\r')){
+                if (estado == 14 || estado == 13){
+                    estado = 13;
+                    c = getNextChar(info); 
+                    
+                }else{
+
+                    //Caso seja um destes caracteres especiais e não esteja dentro de um comentário, ele é ignorado    
+                    while((c == ' ')|| (c == '\n') || (c == '\t')|| (c == '\r')){
+                        c = getNextChar(info);
+                    }
+                    
+                    //Se tiver saindo de comentário, não é necessário classificar token, apenas ignorar os espaços
+                    if (oldState != 14){
+                        ungetChar(info);
+                        novoEstado = 3;
+                        
+                    }
+                    
+                }
+                
+            } else{
+                
+                //Caso seja um caracter inválido, é retornado um erro
+                token->validacao = 1;
+                token->lexema[index_lexema] = c;
+                index_lexema++; 
+                token->linha = info->linha;
+                break;
+            }
+        } else{
+            
+            //Caso o caracter seja válido, o estado é atualizado
+            novoEstado = T[estado][cEntrada];
+            if(avance[estado][cEntrada]){
+                token->lexema[index_lexema] = c;
+                index_lexema++;
+                token->linha = info->linha;
+                c = getNextChar(info);
+            }else{
+                ungetChar(info);
+            }
+            
+        }
+        
+        oldState = estado;
+        estado = novoEstado;            
+    }  
+
+    //Caso o estado seja de aceitação, o token é classificado
+    char estadoString[3];
+    sprintf(estadoString, "%d", oldState);
+    token->lexema[index_lexema] = '\0';
+    
+    //Caso o estado seja 2, é necessário verificar se o token é uma palavra reservada
+    if (oldState == 2){
+        
+        int pesquisa = searchTHash(reservadasHT, token->lexema);
+        (pesquisa != -1) ? (token->type = pesquisa) : (token->type = ID);
+    }else{
+        token->type = searchTHash(auxHT, estadoString);       //Caso não seja, o token é classificado normalmente
+    }   
+        
     return *token;
 }

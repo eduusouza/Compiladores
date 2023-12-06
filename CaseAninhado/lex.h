@@ -4,7 +4,7 @@
 #include <string.h>
 #define TAM_BUFFER 100
 #define TAM_LEXEMA 64
-#define TAM_THASH 2000
+#define TAM_THASH 700
 
 enum Tokens {IF, ELSE, INT, RETURN, VOID, WHILE, WRITE, SOMA, SUB, MULT, DIV, MENOR, MENOR_IGUAL,
             MAIOR, MAIOR_IGUAL, ATRIB, DIF, IGUAL, PONTO_VIRG, VIRG, ABRE_PARENT, FECHA_PARENT, ABRE_COLCH, FECHA_COLCH,
@@ -49,6 +49,8 @@ void deallocateToken(Token *);
 
 char getNextChar(tipoBuffer *);
 
-Token getNextToken(tipoBuffer *, Token *, HNode*[], HNode*[]);
+int cType(char);
+
+Token getNextToken(tipoBuffer *, Token *);
 
 void ungetChar(tipoBuffer *);
