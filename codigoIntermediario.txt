@@ -1,0 +1,7 @@
+(CLEAR,-,-,-)
+(CONST,$sp,500,-)
+(JUMP_MAIN,-,-,-)
+(TYPE,integer,-,-)
+(TYPE,integer,-,-)
+(TYPE,void,-,-)
+(TYPE,void,-,-)

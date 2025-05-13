@@ -362,12 +362,12 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[57] =
     {   0,
-        0,    0,   33,   31,   29,   30,   31,   23,   24,   21,
-       19,   25,   20,   22,   27,   26,   10,    8,   11,   28,
-       15,   16,   28,   28,   28,   28,   28,   17,   18,   29,
-       14,    1,   27,   12,    9,   13,   28,   28,    3,   28,
-       28,   28,   28,   28,    2,   28,   28,   28,    4,   28,
-        6,   28,   28,    7,    5,    0
+        0,    0,   33,   31,   30,   26,   31,   20,   21,    9,
+        7,   19,    8,   10,   29,   18,   11,   17,   13,   28,
+       22,   23,   28,   28,   28,   28,   28,   24,   25,   30,
+       16,   27,   29,   12,   15,   14,   28,   28,    2,   28,
+       28,   28,   28,   28,    3,   28,   28,   28,    1,   28,
+        5,   28,   28,    6,    4,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -474,14 +474,16 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "scanner.l"
-#line 2 "scanner.l"
+#line 1 "flex.l"
+/*Definições*/
+#line 3 "flex.l"
 #include "globals.h"
 
-char tokenValue[MAX_TOKEN_LEN];
-void printToken(int, char*);
-#line 484 "lex.yy.c"
+char tokenString[MAXTOKENLEN+1];
+
 #line 485 "lex.yy.c"
+/*regras*/
+#line 487 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -698,10 +700,9 @@ YY_DECL
 		}
 
 	{
-#line 15 "scanner.l"
+#line 14 "flex.l"
 
-
-#line 705 "lex.yy.c"
+#line 706 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -760,175 +761,183 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 17 "scanner.l"
-{ char c;
-                  do {
-                    c = input();
-                    if (c == EOF) break;
-                    if (c == '\n') yyline++;
-                    if (c == '*') {
-                        if (input() == '/') break;
-                    }
-                  } while (1);
-                }
+#line 15 "flex.l"
+{return ELSE;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 27 "scanner.l"
-{return INT;}
+#line 16 "flex.l"
+{return IF;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 28 "scanner.l"
-{return IF;}
+#line 17 "flex.l"
+{return INT;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 29 "scanner.l"
-{return ELSE;}
+#line 18 "flex.l"
+{return RETURN;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 30 "scanner.l"
-{return RETURN;}
+#line 19 "flex.l"
+{return VOID;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 31 "scanner.l"
-{return VOID;}
+#line 20 "flex.l"
+{return WHILE;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 32 "scanner.l"
-{return WHILE;}
+#line 21 "flex.l"
+{return SUM;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 33 "scanner.l"
-{return ASSIGN;}
+#line 22 "flex.l"
+{return SUB;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 34 "scanner.l"
-{return EQ;}
+#line 23 "flex.l"
+{return MULT;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 35 "scanner.l"
-{return LESS_THAN;}
+#line 24 "flex.l"
+{return DIV;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 36 "scanner.l"
-{return GREATER_THAN;}
+#line 25 "flex.l"
+{return LT;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 37 "scanner.l"
-{return LESS_THAN_EQ;}
+#line 26 "flex.l"
+{return LET;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 38 "scanner.l"
-{return GREATER_THAN_EQ;}
+#line 27 "flex.l"
+{return GT;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 39 "scanner.l"
-{return NOT_EQ;}
+#line 28 "flex.l"
+{return GET;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 40 "scanner.l"
-{return OPEN_BRACKET;}
+#line 29 "flex.l"
+{return EQ;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 41 "scanner.l"
-{return CLOSE_BRACKET;}
+#line 30 "flex.l"
+{return NEQ;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 42 "scanner.l"
-{return OPEN_KEYS;}
+#line 31 "flex.l"
+{return ATTR;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 43 "scanner.l"
-{return CLOSE_KEYS;}
+#line 32 "flex.l"
+{return SEMI;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 44 "scanner.l"
-{return SUM;}
+#line 33 "flex.l"
+{return COMMA;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 45 "scanner.l"
-{return SUBTRACT;}
+#line 34 "flex.l"
+{return OP;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 46 "scanner.l"
-{return MULTIPLY;}
+#line 35 "flex.l"
+{return CP;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 47 "scanner.l"
-{return DIVIDE;}
+#line 36 "flex.l"
+{return OSB;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 48 "scanner.l"
-{return OPEN_PARENTHESES;}
+#line 37 "flex.l"
+{return CSB;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 49 "scanner.l"
-{return CLOSE_PARENTHESES;}
+#line 38 "flex.l"
+{return OCB;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 50 "scanner.l"
-{return COMMA;}
+#line 39 "flex.l"
+{return CCB;}
 	YY_BREAK
 case 26:
+/* rule 26 can match eol */
 YY_RULE_SETUP
-#line 51 "scanner.l"
-{return SEMICOLON;}
+#line 40 "flex.l"
+{line_number++;
+                printf("\n");
+                }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 52 "scanner.l"
-{return NUM;}
+#line 43 "flex.l"
+{ 
+                while (1) {
+                    char c = input();
+                    if (c == '\n') {
+                        line_number++;  // Increment line number on newline
+                    } else if (c == '*') {
+                        // Check if the next character is '/'
+                        c = input();
+                        if (c == '/') break;  // End of comment, break the loop
+                    } else if (c == 0) {
+                        // End of file before comment closed
+                        fprintf(stderr, "Unterminated comment at line %d\n", line_number);
+                        exit(1);
+                    }
+                }
+            }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 53 "scanner.l"
+#line 59 "flex.l"
 {return ID;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 54 "scanner.l"
-{         }
+#line 60 "flex.l"
+{return NUM;}
 	YY_BREAK
 case 30:
-/* rule 30 can match eol */
 YY_RULE_SETUP
-#line 55 "scanner.l"
-{yyline++;}
+#line 61 "flex.l"
+{}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 56 "scanner.l"
+#line 62 "flex.l"
 {return ERROR;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 58 "scanner.l"
+#line 64 "flex.l"
 ECHO;
 	YY_BREAK
-#line 932 "lex.yy.c"
+#line 941 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1933,140 +1942,23 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 58 "scanner.l"
+#line 64 "flex.l"
 
 
-int main(int argc, char *argv[]){
-    int token;
-    if (argc > 0){
-        yyin = fopen(argv[1], "r");
-    } else {
-        yyin = stdin;
-    }
-    token = yylex();
-    strncpy(tokenValue, yytext, MAX_TOKEN_LEN);
-
-    if (token >= 0 && token < 27){
-        printToken(token, tokenValue);
-    } else if (token == 27 ){
-        printf("ERRO LEXICO: %s, linha: %d", tokenValue, yyline);
-    }
-    fclose(yyin);
-    return 0;
-}
-
-void printToken(int token, char* lexema){
-    switch (token){
-        case INT:
-            printf("LEXEMA: %s, TOKEN: INT, linha: %d\n", lexema, yyline);
-            break;
-
-        case IF:
-            printf("LEXEMA: %s, TOKEN: IF, linha: %d\n", lexema, yyline);
-            break;
-
-        case ELSE:
-            printf("LEXEMA: %s, TOKEN: ELSE, linha: %d\n", lexema, yyline);
-            break;
-
-        case RETURN:
-            printf("LEXEMA: %s, TOKEN: RETURN, linha: %d\n", lexema, yyline);
-            break;
-        
-        case VOID:
-            printf("LEXEMA: %s, TOKEN: VOID, linha: %d\n", lexema, yyline);
-            break;
-
-        case WHILE:
-            printf("LEXEMA: %s, TOKEN: WHILE, linha: %d\n", lexema, yyline);
-            break;
-        
-        case ASSIGN:
-            printf("LEXEMA: %s, TOKEN: ASSIGN, linha: %d\n", lexema, yyline);
-            break;
-        
-        case EQ:
-            printf("LEXEMA: %s, TOKEN: EQ, linha: %d\n", lexema, yyline);
-            break;
-        
-        case LESS_THAN:
-            printf("LEXEMA: %s, TOKEN: LESS_THAN, linha: %d\n", lexema, yyline);
-            break;
-        
-        case GREATER_THAN:
-            printf("LEXEMA: %s, TOKEN: GREATER_THAN, linha: %d\n", lexema, yyline);
-            break;
-        
-        case LESS_THAN_EQ:
-            printf("LEXEMA: %s, TOKEN: LESS_THAN_EQ, linha: %d\n", lexema, yyline);
-            break;
-        
-        case GREATER_THAN_EQ:
-            printf("LEXEMA: %s, TOKEN: GREATER_THAN_EQ, linha: %d\n", lexema, yyline);
-            break;
-        
-        case NOT_EQ:
-            printf("LEXEMA: %s, TOKEN: NOT_EQ, linha: %d\n", lexema, yyline);
-            break;
-        
-        case OPEN_BRACKET:
-            printf("LEXEMA: %s, TOKEN: OPEN_BRACKET, linha: %d\n", lexema, yyline);
-            break;
-        
-        case CLOSE_BRACKET:
-            printf("LEXEMA: %s, TOKEN: CLOSE_BRACKET, linha: %d\n", lexema, yyline);
-            break;
-        
-        case OPEN_KEYS:
-            printf("LEXEMA: %s, TOKEN: OPEN_KEYS, linha: %d\n", lexema, yyline);
-            break;
-        
-        case CLOSE_KEYS:
-            printf("LEXEMA: %s, TOKEN: CLOSE_KEYS, linha: %d\n", lexema, yyline);
-            break;
-        
-        case SUM:
-            printf("LEXEMA: %s, TOKEN: SUM, linha: %d\n", lexema, yyline);
-            break;
-        
-        case SUBTRACT:
-            printf("LEXEMA: %s, TOKEN: SUBTRACT, linha: %d\n", lexema, yyline);
-            break;
-        
-        case MULTIPLY:
-            printf("LEXEMA: %s, TOKEN: MULTIPLY, linha: %d\n", lexema, yyline);
-            break;
-        
-        case DIVIDE:
-            printf("LEXEMA: %s, TOKEN: DIVIDE, linha: %d\n", lexema, yyline);
-            break;
-        
-        case OPEN_PARENTHESES:
-            printf("LEXEMA: %s, TOKEN: OPEN_PARENTHESES, linha: %d\n", lexema, yyline);
-            break;
-        
-        case CLOSE_PARENTHESES:
-            printf("LEXEMA: %s, TOKEN: CLOSE_PARENTHESES, linha: %d\n", lexema, yyline);
-            break;
-
-        case COMMA:
-            printf("LEXEMA: %s, TOKEN: COMMA, linha: %d\n", lexema, yyline);
-            break;
-        
-        case SEMICOLON:
-            printf("LEXEMA: %s, TOKEN: SEMICOLON, linha: %d\n", lexema, yyline);
-            break;
-        
-        case NUM:
-            printf("LEXEMA: %s, TOKEN: NUM, linha: %d\n", lexema, yyline);
-            break;
-        
-        case ID:
-            printf("LEXEMA: %s, TOKEN: ID, linha: %d\n", lexema, yyline);
-            break;
-        
-        default:
-            printf("Token Desconhecido: %s, linha: %d", lexema, yyline);
-            break;
-    }
+TokenType getToken(void){
+  static int firstTime = TRUE;
+  TokenType currentToken;
+  if (firstTime){ 
+    firstTime = FALSE;
+    line_number++;
+    yyin = inputFile;
+    yyout = outputFile;
+  }
+  
+  currentToken = yylex();
+  strncpy(tokenString,yytext,MAXTOKENLEN);
+  if (TraceScan) {
+    printToken(currentToken,tokenString);
+  }
+  return currentToken;
 }
