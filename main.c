@@ -1,75 +1,98 @@
 #include "globals.h"
+#include "symtab.h"
+#include "analyze.h"
+#include "util_analyze.h"
+#include <string.h>
+#include "scan.h"
+#include "parse.h"
+#include "analyze.h"
+#include "cgen.h"
+#include "util.h"
 
-#define NO_PARSE FALSE
-#define NO_ANALYSE FALSE
-#define NO_CODE FALSE
+int lineno = 0;
 
-int TraceScan = TRUE;
+FILE *source;
+FILE *arquivoIntermediario;
+FILE *arquivoAssembly;
+FILE *arquivoBinario;
+
+int EchoSource = FALSE;
+int TraceScan = FALSE;
 int TraceParse = TRUE;
 int TraceAnalyze = TRUE;
-
-FILE *arquivoIntermediario;
-
-// int TraceScan = FALSE;
-// int TraceParse = FALSE;
-// int TraceAnalyze = FALSE;
+int TraceCode = FALSE;
 
 int Error = FALSE;
 
-int main(int argc, char **argv){
+int yywrap()
+{
+  return 1;
+}
 
-    TreeNode *arvoreSintatica;
-    line_number = 0;
+int main(int argc, char *argv[])
+{
+  TreeNode *arvoreSintatica;
+  char nomeArquivo[120];
 
-    if (argc != 2){
-        printf("Quantidade de entradas incorreta.\n");
-        return 1;
+  if (argc != 2){
+    printf("Quantidade de entradas incorreta.\n");
+    return 1;
+  }
+
+  strcpy(nomeArquivo, argv[1]);
+
+  source = fopen(nomeArquivo, "r");
+
+  if (source == NULL){
+    printf("Arquivo '%s' não encontrado\n", nomeArquivo);
+    exit(1);
+  }
+
+  printf("\nCompilação do código C-: %s\n", nomeArquivo);
+
+  arvoreSintatica = parse();
+
+  if (TraceParse && !Error){
+    printf("\nÁRVORE SINTÁTICA:\n");
+    printTree(arvoreSintatica);
+  }
+
+  if (!Error){
+    if (TraceAnalyze){
+      printf("\nCONSTRUINDO TABELA DE SIMBOLOS\n");
     }
-    inputFile = fopen(argv[1], "r");
 
-    if (inputFile == NULL){
-        printf("Arquivo de input nao encontrado\n");
+    implementaTabela(arvoreSintatica);
+
+    if (TraceAnalyze){
+      printf("\nANALISADOR SEMÂNTICO\n");  
+      checaTipoDoNo(arvoreSintatica);
     }
+  }
 
-    printf("Inicio da compilacao.\n");
+  if (!Error){
+    printf("\nGERANDO CODIGO INTERMEDIARIO\n");
 
-    #if NO_PARSE
-        while (getToken()!=YYEOF);
-    #else
-        arvoreSintatica = parse();
-        if (TraceParse){
-            printf("\nArvore Sintatica:\n");
-            printTree(arvoreSintatica);
-        }
-    
-    #if !NO_ANALYZE
-        if(!Error){
-            if (TraceAnalyze)
-              printf("\nCriando tabela de símbolos...\n");
-            printf("\n");
-            buildSymtab(arvoreSintatica);
-            if (TraceAnalyze)
-                printf("\nInício da verificação de tipos...\n");
-            typeCheck(arvoreSintatica);
-            if (TraceAnalyze)
-                printf("\nFim da verificação de tipos\n");
-        }
-    
-    #if !NO_CODE
-        if(Error){
-            //Logica para gerar codigo intermediario
-            arquivoIntermediario = fopen("codigoIntermediario.txt", "w");
+    // Gerador de código intermediário
+    char *intermediario;
 
-            geraIntermediario(arvoreSintatica);
+    int tamanho = strcspn(nomeArquivo, ".");
 
-            fclose(arquivoIntermediario);
-        }
-    #endif
-    #endif
-    #endif
+    intermediario = (char *)calloc(tamanho + 4, sizeof(char));
 
-    printf("\nFim da compilação.\n");
+    strncpy(intermediario, nomeArquivo, tamanho);
+    strcat(intermediario, ".inter");
+    arquivoIntermediario = fopen(intermediario, "w");
 
-    fclose(inputFile);
-    return 0;
+    geraIntermediario(arvoreSintatica);
+    fclose(arquivoIntermediario);
+
+    printf("\nCódigo finalizado\n");
+
+    printf("\nFIM\n");
+  }
+
+  fclose(source);
+
+  return 0;
 }

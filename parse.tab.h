@@ -35,8 +35,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_PARSER_TAB_H_INCLUDED
-# define YY_YY_PARSER_TAB_H_INCLUDED
+#ifndef YY_YY_PARSE_TAB_H_INCLUDED
+# define YY_YY_PARSE_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -54,35 +54,35 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    IF = 258,                      /* IF  */
-    ELSE = 259,                    /* ELSE  */
+    ELSE = 258,                    /* ELSE  */
+    IF = 259,                      /* IF  */
     INT = 260,                     /* INT  */
     RETURN = 261,                  /* RETURN  */
     VOID = 262,                    /* VOID  */
     WHILE = 263,                   /* WHILE  */
-    NUM = 264,                     /* NUM  */
-    ID = 265,                      /* ID  */
-    SUM = 266,                     /* SUM  */
+    ID = 264,                      /* ID  */
+    NUM = 265,                     /* NUM  */
+    ADD = 266,                     /* ADD  */
     SUB = 267,                     /* SUB  */
     MULT = 268,                    /* MULT  */
     DIV = 269,                     /* DIV  */
-    LT = 270,                      /* LT  */
-    LET = 271,                     /* LET  */
-    GT = 272,                      /* GT  */
-    GET = 273,                     /* GET  */
-    EQ = 274,                      /* EQ  */
-    NEQ = 275,                     /* NEQ  */
-    ATTR = 276,                    /* ATTR  */
+    MENOR = 270,                   /* MENOR  */
+    MENORIG = 271,                 /* MENORIG  */
+    MAIOR = 272,                   /* MAIOR  */
+    MAIORIG = 273,                 /* MAIORIG  */
+    COMP = 274,                    /* COMP  */
+    IGUAL = 275,                   /* IGUAL  */
+    DIF = 276,                     /* DIF  */
     SEMI = 277,                    /* SEMI  */
-    COMMA = 278,                   /* COMMA  */
-    OP = 279,                      /* OP  */
-    CP = 280,                      /* CP  */
-    OSB = 281,                     /* OSB  */
-    CSB = 282,                     /* CSB  */
-    OCB = 283,                     /* OCB  */
-    CCB = 284,                     /* CCB  */
+    VIRG = 278,                    /* VIRG  */
+    ESQPARENT = 279,               /* ESQPARENT  */
+    DIRPARENT = 280,               /* DIRPARENT  */
+    ESQCOL = 281,                  /* ESQCOL  */
+    DIRCOL = 282,                  /* DIRCOL  */
+    ESQCHAV = 283,                 /* ESQCHAV  */
+    DIRCHAV = 284,                 /* DIRCHAV  */
     ERROR = 285,                   /* ERROR  */
-    ENDFILE = 286                  /* ENDFILE  */
+    FIM = 286                      /* FIM  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -101,4 +101,4 @@ extern YYSTYPE yylval;
 int yyparse (void);
 
 
-#endif /* !YY_YY_PARSER_TAB_H_INCLUDED  */
+#endif /* !YY_YY_PARSE_TAB_H_INCLUDED  */

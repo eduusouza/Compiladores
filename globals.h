@@ -1,89 +1,111 @@
-#define _GLOBALS_H
+#ifndef _GLOBALS_H_
+#define _GLOBALS_H_
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include <string.h>
 
 #ifndef YYPARSER
 
-#include "parser.tab.h"
+#include "parse.tab.h"
+
+#define ENDFILE 0
 
 #endif
 
-#define TRUE 1
+#ifndef FALSE
 #define FALSE 0
-#define MAXRESERVED 6
+#endif
 
-#define MAXCHILDREN 3
+#ifndef TRUE
+#define TRUE 1
+#endif
 
-#define MAXTOKENLEN 32
+#define MAXRESERVED 8
 
-extern int line_number;
-extern FILE* inputFile;
-extern FILE* outputFile;
-extern char tokenString[MAXTOKENLEN+1];
-extern FILE* arquivoIntermediario;
 
-typedef int TokenType;
+typedef int TokenType; 
+
+extern FILE* source; 
+extern FILE* arquivoIntermediario; 
+extern FILE* arquivoAssembly; 
+extern FILE *arquivoBinario;
+
+extern int lineno;
 
 typedef enum {
-    statementK, expressionK
+	Declaracao_NodeK, EXP_NodeK
 } NodeKind;
 
 typedef enum {
-    ifK, whileK, assignK, variableK, functionK, callK, returnK, numberK, vectorStmtK
-} StatementKind;
+	If_StmtK, While_StmtK, Igual_StmtK, Variavel_StmtK, Vetor_StmtK, Funcao_StmtK, Parametro_StmtK, Call_StmtK, Return_StmtK, Read_StmtK, Write_StmtK
+} StmtKind;
 
 typedef enum {
-    operationK, constantK, idK, vectorK, vectorIdK, typeK
-} ExpressionKind;
+	Operacao_ExpK, Constante_ExpK, ID_ExpK, Vetor_ExpK, Tipo_ExpK
+} ExpKind;
 
 typedef enum {
-    voidK, integerK, booleanK
-} ExpressionType;
+	Void_ExpT, Integer_ExpT, Boolean_ExpT
+} ExpType;
 
-typedef struct treeNode{
-    struct treeNode * child[MAXCHILDREN];
-    struct treeNode * sibling;
+#define MAXCHILDREN 3
 
-    int lineno;
-    NodeKind nodekind;
-
-    union {
-        StatementKind stmt;
-        ExpressionKind exp;
-    } kind;
-
-    struct {
-        TokenType op;
-        int val;
-        int len;
-        char* name;
-        char* scope;
-    } attr;
-
-    ExpressionType type;
-
+typedef struct treeNode { 
+	struct treeNode * child[MAXCHILDREN];
+     	struct treeNode * sibling;
+     	int lineno;
+     	NodeKind nodekind;
+     	
+     	union {
+     		StmtKind stmt; 
+     		ExpKind exp;
+     	} kind;
+     	
+     	struct { 
+     		TokenType op;
+			int val;
+      		int len;
+        	char * name; 
+			char * escopo;
+		} attr;
+	
+     	ExpType type;
 } TreeNode;
 
+/**************************************************/
+/***********   Flags for tracing       ************/
+/**************************************************/
+
+/* EchoSource = TRUE causes the source program to
+ * be echoed to the listing file with line numbers
+ * during parsing
+ */
+extern int EchoSource;
+
+/* TraceScan = TRUE causes token information to be
+ * printed to the listing file as each token is
+ * recognized by the scanner
+ */
 extern int TraceScan;
+
+/* TraceParse = TRUE causes the syntax tree to be
+ * printed to the listing file in linearized form
+ * (using indents for children)
+ */
+extern int TraceParse;
+
+/* TraceAnalyze = TRUE causes symbol table inserts
+ * and lookups to be reported to the listing file
+ */
 extern int TraceAnalyze;
-extern int Error;
 
-void printToken(TokenType, const char*);
+/* TraceCode = TRUE causes comments to be written
+ * to the TM arquivoIntermediario file as arquivoIntermediario is generated
+ */
+extern int TraceCode;
 
-TokenType getToken(void);
-
-TreeNode *newStmtNode(StatementKind);
-TreeNode *newExpNode(ExpressionKind);
-
-char *copyString(char *);
-void aggScope(TreeNode*, char*);
-
-#ifndef _PARSE_H_
-#define _PARSE_H_
-
-TreeNode * parse(void);
+/* Error = TRUE prevents further passes if an error occurs */
+extern int Error; 
 #endif
-
-void printTree(TreeNode *);
