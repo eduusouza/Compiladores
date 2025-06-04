@@ -7,6 +7,7 @@
 #include "parse.h"
 #include "analyze.h"
 #include "cgen.h"
+#include "conv_assembly.h"
 #include "util.h"
 
 int lineno = 0;
@@ -86,6 +87,36 @@ int main(int argc, char *argv[])
 
     geraIntermediario(arvoreSintatica);
     fclose(arquivoIntermediario);
+
+    // Gerador de código assembly
+    char *assembly;
+
+    tamanho = strcspn(nomeArquivo, ".");
+
+    assembly = (char *)calloc(tamanho + 4, sizeof(char));
+    strncpy(assembly, nomeArquivo, tamanho);
+    strcat(assembly, ".assembly");
+
+    arquivoAssembly = fopen(assembly, "w"); // abre intermediario .assembly para escrita
+
+    if (arquivoAssembly == NULL)
+    {
+      printf("Unable to open a %s\n", assembly);
+      exit(1);
+    }
+
+    arquivoIntermediario = fopen(intermediario, "r"); // abre intermediario .inter para leitura
+
+    if (arquivoIntermediario == NULL)
+    {
+      printf("Unable to open b %s\n", intermediario);
+      exit(1);
+    }
+
+    geraAssembly();
+
+    fclose(arquivoIntermediario);
+    fclose(arquivoAssembly);
 
     printf("\nCódigo finalizado\n");
 

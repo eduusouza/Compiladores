@@ -176,12 +176,10 @@ static int generateStmt(TreeNode *no){
          cont = 0;
          name = no->attr.name;
 
-         if (strcmp(no->attr.name, "output") == 0 || strcmp(no->attr.name, "input") == 0){
+         if (strcmp(no->attr.name, "output") == 0){
             if (no->child[0] != NULL){
                param = analyzeNodeCall(no->child[0]);
                fprintf(arquivoIntermediario, "(CALL_OUT,$t%d,%s,-)\n", param, no->attr.name); 
-            } else {
-               fprintf(arquivoIntermediario, "(CALL_IN,$t%d,%s,-)\n", temporario, no->attr.name);
             }
          } else {
             if (no->child[0] != NULL){
