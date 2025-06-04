@@ -1,0 +1,9 @@
+CODIGO INTERMEDIARIO:
+(NOP,-,-,-)
+(JUMP_MAIN,-,-,-)
+(FUNC,int,main,-)
+(ALLOC,a,main,-)
+(CALL_IN,$t0,input,-)
+(STORE,$t0,a,-)
+(END,main,-,-)
+(HALT,-,-,-)
