@@ -1,8 +1,7 @@
 #ifndef _ASSEMBLY_H_
 #define _ASSEMBLY_H_
 
-typedef struct
-{
+typedef struct{
     char instruc[6];
     char reg1[5];
     char reg2[5];
@@ -12,8 +11,7 @@ typedef struct
 
 ASSEMBLY *instrucao;
 
-typedef struct
-{
+typedef struct{
     char name[10];
     int posicao;
 } LABEL;
@@ -23,8 +21,7 @@ LABEL *posicaoLabel;
 char registrador[10];
 
 // ARRUMAR VALORES DOS REGISTRADORES COM O PROCESSADOR/RELATORIO
-typedef enum
-{
+typedef enum{
     $zero,
     $at,
     $v0,
