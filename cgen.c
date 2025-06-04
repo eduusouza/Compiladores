@@ -180,7 +180,7 @@ static int generateStmt(TreeNode *no){
             if (no->child[0] != NULL){
                param = analyzeNodeCall(no->child[0]);
                fprintf(arquivoIntermediario, "(CALL_OUT,$t%d,%s,-)\n", param, no->attr.name); 
-} else {
+            } else {
                fprintf(arquivoIntermediario, "(CALL_IN,$t%d,%s,-)\n", temporario, no->attr.name);
             }
          } else {
@@ -341,12 +341,11 @@ static int generateExp(TreeNode *no){
             printf("(LOAD,$t%d,0,$t%d)\n", temporario, temporario - 1);
             fprintf(arquivoIntermediario, "(LOAD,$t%d,0,$t%d)\n", temporario, temporario - 1);
          } else {
-            printf("\n\nAUX1: %d\n\n", aux1);
 
-            printf("(LOAD_V,$t%d,%s,$t%d)\n", temporario, no->attr.name, aux1);
-            fprintf(arquivoIntermediario, "(LOAD_V,$t%d,%s,$t%d)\n", temporario, no->attr.name, aux1);
+         printf("(LOAD_V,$t%d,%s,$t%d)\n", temporario, no->attr.name, aux1);
+         fprintf(arquivoIntermediario, "(LOAD_V,$t%d,%s,$t%d)\n", temporario, no->attr.name, aux1);
          }
-
+         
          aux2 = temporario;
          temporario++;
          return aux2;
