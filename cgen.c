@@ -422,6 +422,7 @@ void geraIntermediario(TreeNode *no){
    fprintf(arquivoIntermediario, "CODIGO INTERMEDIARIO:\n");
 
    fprintf(arquivoIntermediario, "(NOP,-,-,-)\n");
+   fprintf(arquivoIntermediario, "(CONST,$sp,500,-)\n");
    fprintf(arquivoIntermediario, "(JUMP_MAIN,-,-,-)\n");
 
    analyzeNode(no);

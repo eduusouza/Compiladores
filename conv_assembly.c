@@ -681,6 +681,14 @@ void jumpMain(char *linha, int indice){
     strcpy(instrucao[linhaAtual].instruc, "jmain");
 }
 
+void halt(char *linha, int indice){
+    strcpy(instrucao[linhaAtual].instruc, "halt");
+}
+
+void nop(char *linha, int indice){
+    strcpy(instrucao[linhaAtual].instruc, "nop");
+}
+
 void escreveNoArquivo(){
     for (int i = 1; i < linhaAtual; i++){
         fprintf(arquivoAssembly, "%s %s%s%s", instrucao[i].instruc, instrucao[i].reg1, instrucao[i].reg2, instrucao[i].regD);
@@ -696,7 +704,7 @@ void geraAssembly(){
     char read[51];
 
     strcpy(function, "");
-
+    
     instrucao = (ASSEMBLY *)malloc(sizeof(ASSEMBLY));
     posicaoRetornoLabel = (int *)malloc(sizeof(int) * returnLabel() + 1);
     posicaoLabel = (LABEL *)malloc(sizeof(LABEL));
@@ -817,6 +825,12 @@ void nome_instrucao(char *read){
 
     } else if (strcmp(instruc, "JUMP_MAIN") == 0){
         jumpMain(read, i);
+
+    } else if (strcmp(instruc, "HALT") == 0){
+        halt(read, i);
+
+    } else if (strcmp(instruc, "NOP") == 0){
+        nop(read, i);
 
     } else {
         strcpy(instrucao[linhaAtual].instruc, instruc);

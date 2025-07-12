@@ -1,5 +1,6 @@
 CODIGO INTERMEDIARIO:
 (NOP,-,-,-)
+(CONST,$sp,500,-)
 (JUMP_MAIN,-,-,-)
 (FUNC,int,gcd,-)
 (PARAM,int,u,gcd)

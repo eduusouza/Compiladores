@@ -7,7 +7,6 @@
 #include "parse.h"
 #include "analyze.h"
 #include "cgen.h"
-#include "conv_assembly.h"
 #include "util.h"
 
 int lineno = 0;
