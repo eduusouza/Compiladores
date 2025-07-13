@@ -54,11 +54,7 @@ void labels(){
             strcpy(instrucao[i].reg1, aux);
 
         } else if (strcmp(instrucao[i].instruc, "bne") == 0 ||
-        strcmp(instrucao[i].instruc, "beq") == 0 ||
-        strcmp(instrucao[i].instruc, "blt") == 0 ||
-        strcmp(instrucao[i].instruc, "bgt") == 0 ||
-        strcmp(instrucao[i].instruc, "ble") == 0 ||
-        strcmp(instrucao[i].instruc, "bge") == 0){
+        strcmp(instrucao[i].instruc, "beq") == 0){
 
             j = 1;
             while (instrucao[i].regD[j] != '\0'){
@@ -98,14 +94,11 @@ int buscaValorEnderecoRegistrador(char *regAux){ // retorna o número do registr
     if (strcmp(regAux, "$zero") == 0 || strcmp(registrador, "-") == 0 || strcmp(registrador, "0") == 0){
         return $zero;
 
-    } else if (strcmp(regAux, "$at") == 0){
-        return $at;
+    } else if (strcmp(regAux, "$r0") == 0){
+        return $r0;
 
     } else if (strcmp(regAux, "$v0") == 0){
         return $v0;
-
-    } else if (strcmp(regAux, "$v1") == 0){
-        return $v1;
 
     } else if (strcmp(regAux, "$a0") == 0){
         return $a0;
@@ -118,6 +111,12 @@ int buscaValorEnderecoRegistrador(char *regAux){ // retorna o número do registr
 
     } else if (strcmp(regAux, "$a3") == 0){
         return $a3;
+
+    } else if (strcmp(regAux, "$a4") == 0){
+        return $a4;
+
+    } else if (strcmp(regAux, "$a5") == 0){
+        return $a5;
 
     } else if (strcmp(regAux, "$t0") == 0){
         return $t0;
@@ -155,41 +154,41 @@ int buscaValorEnderecoRegistrador(char *regAux){ // retorna o número do registr
     } else if (strcmp(regAux, "$t11") == 0){
         return $t11;
 
-    } else if (strcmp(regAux, "$t12") == 0){
-        return $t12;
+    } else if (strcmp(regAux, "$s0") == 0){
+        return $s0;
 
-    } else if (strcmp(regAux, "$t13") == 0){
-        return $t13;
+    } else if (strcmp(regAux, "$s1") == 0){
+        return $s1;
 
-    } else if (strcmp(regAux, "$t14") == 0){
-        return $t14;
+    } else if (strcmp(regAux, "$s2") == 0){
+        return $s2;
 
-    } else if (strcmp(regAux, "$t15") == 0){
-        return $t15;
+    } else if (strcmp(regAux, "$s3") == 0){
+        return $s3;
 
-    } else if (strcmp(regAux, "$t16") == 0){
-        return $t16;
+    } else if (strcmp(regAux, "$s4") == 0){
+        return $s4;
 
-    } else if (strcmp(regAux, "$t17") == 0){
-        return $t17;
+    } else if (strcmp(regAux, "$s5") == 0){
+        return $s5;
 
-    } else if (strcmp(regAux, "$t18") == 0){
-        return $t18;
+    } else if (strcmp(regAux, "$s6") == 0){
+        return $s6;
 
-    } else if (strcmp(regAux, "$t19") == 0){
-        return $t19;
+    } else if (strcmp(regAux, "$s7") == 0){
+        return $s7;
 
-    } else if (strcmp(regAux, "$sp") == 0){
-        return $sp;
-
-    } else if (strcmp(regAux, "$hi") == 0){
-        return $hi;
-
-    } else if (strcmp(regAux, "$lo") == 0){
-        return $lo;
+    } else if (strcmp(regAux, "$s8") == 0){
+        return $s8;
 
     } else if (strcmp(regAux, "$ra") == 0){
         return $ra;
+
+    } else if (strcmp(regAux, "$v0") == 0){
+        return $v0;
+
+    } else if (strcmp(regAux, "$sp") == 0){
+        return $sp;
     }
 }
 
@@ -201,12 +200,34 @@ void addi(char *linha, int indice){
     indice = parametro(linha, indice);
 
     sprintf(aux, "$%d,", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].reg1, aux);
+
+    indice = parametro(linha, indice);
+    sprintf(aux, "%s,", registrador);
     strcpy(instrucao[linhaAtual].reg2, aux);
+
+    ultimo_parametro(linha, indice);
+    sprintf(aux, "$%d", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].regD, aux);
+}
+
+void subi(char *linha, int indice){
+    char aux[5];
+
+    strcpy(instrucao[linhaAtual].instruc, "addi");
 
     indice = parametro(linha, indice);
 
-    strcpy(instrucao[linhaAtual].regD, registrador);
-    strcpy(instrucao[linhaAtual].reg1, "$0,");
+    sprintf(aux, "$%d,", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].reg1, aux);
+
+    indice = parametro(linha, indice);
+    sprintf(aux, "%s,", registrador);
+    strcpy(instrucao[linhaAtual].reg2, aux);
+
+    ultimo_parametro(linha, indice);
+    sprintf(aux, "$%d", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].regD, aux);
 }
 
 void jump(char *linha, int indice){
@@ -238,7 +259,6 @@ void label(char *linha, int indice){
 void funcao(char *linha, int indice){
     // armazeno qual é a label relacionada à essa funcao
 
-    indice = parametro(linha, indice);
     indice = parametro(linha, indice);
 
     sprintf(function, "%s", registrador);
@@ -374,17 +394,22 @@ void callOut(char *linha, int indice){
     indice = parametro(linha, indice);
 
     sprintf(aux, "$%d", buscaValorEnderecoRegistrador(registrador));
-    strcpy(instrucao[linhaAtual].reg1, aux);
-    strcpy(instrucao[linhaAtual].reg2, "");
+    strcpy(instrucao[linhaAtual].reg1, "");
+    strcpy(instrucao[linhaAtual].reg2, aux);
     strcpy(instrucao[linhaAtual].regD, "");
 }
 
-void if_conditional(char *linha, int indice){
-    indice = parametro(linha, indice);
+void callIn(char *linha, int indice){
+    char aux[5];
+
+    strcpy(instrucao[linhaAtual].instruc, "input");
+
     indice = parametro(linha, indice);
 
-    strcpy(instrucao[linhaAtual - 1].regD, registrador);
-    linhaAtual--;
+    sprintf(aux, "$%d", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].reg1, "");
+    strcpy(instrucao[linhaAtual].reg2, aux);
+    strcpy(instrucao[linhaAtual].regD, "");
 }
 
 void branchNE(char *linha, int indice){
@@ -421,9 +446,9 @@ void branchEQ(char *linha, int indice){
     strcpy(instrucao[linhaAtual].regD, "");
 }
 
-void branchGE(char *linha, int indice){
+void set(char *linha, int indice){
 
-    strcpy(instrucao[linhaAtual].instruc, "bge");
+    strcpy(instrucao[linhaAtual].instruc, "set");
     indice = parametro(linha, indice);
 
     char aux[5];
@@ -435,12 +460,15 @@ void branchGE(char *linha, int indice){
     sprintf(aux, "$%d,", buscaValorEnderecoRegistrador(registrador));
     strcpy(instrucao[linhaAtual].reg2, aux);
 
-    strcpy(instrucao[linhaAtual].regD, "");
+    ultimo_parametro(linha, indice);
+
+    sprintf(aux, "$%d", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].regD, aux);
 }
 
-void branchGT(char *linha, int indice){
+void sbte(char *linha, int indice){
 
-    strcpy(instrucao[linhaAtual].instruc, "bgt");
+    strcpy(instrucao[linhaAtual].instruc, "sbte");
     indice = parametro(linha, indice);
 
     char aux[5];
@@ -452,12 +480,15 @@ void branchGT(char *linha, int indice){
     sprintf(aux, "$%d,", buscaValorEnderecoRegistrador(registrador));
     strcpy(instrucao[linhaAtual].reg2, aux);
 
-    strcpy(instrucao[linhaAtual].regD, "");
+    ultimo_parametro(linha, indice);
+
+    sprintf(aux, "$%d", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].regD, aux);
 }
 
-void branchLE(char *linha, int indice){
+void sbt(char *linha, int indice){
 
-    strcpy(instrucao[linhaAtual].instruc, "ble");
+    strcpy(instrucao[linhaAtual].instruc, "sbt");
     indice = parametro(linha, indice);
 
     char aux[5];
@@ -469,12 +500,15 @@ void branchLE(char *linha, int indice){
     sprintf(aux, "$%d,", buscaValorEnderecoRegistrador(registrador));
     strcpy(instrucao[linhaAtual].reg2, aux);
 
-    strcpy(instrucao[linhaAtual].regD, "");
+    ultimo_parametro(linha, indice);
+
+    sprintf(aux, "$%d", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].regD, aux);
 }
 
-void branchLT(char *linha, int indice){
+void slte(char *linha, int indice){
 
-    strcpy(instrucao[linhaAtual].instruc, "blt");
+    strcpy(instrucao[linhaAtual].instruc, "slte");
     indice = parametro(linha, indice);
 
     char aux[5];
@@ -486,15 +520,30 @@ void branchLT(char *linha, int indice){
     sprintf(aux, "$%d,", buscaValorEnderecoRegistrador(registrador));
     strcpy(instrucao[linhaAtual].reg2, aux);
 
-    strcpy(instrucao[linhaAtual].regD, "");
+    ultimo_parametro(linha, indice);
+
+    sprintf(aux, "$%d", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].regD, aux);
 }
 
-void ret(char *linha, int indice){
+void slt(char *linha, int indice){
 
-    strcpy(instrucao[linhaAtual].instruc, "jr");
-    strcpy(instrucao[linhaAtual].reg1, "$ra");
-    strcpy(instrucao[linhaAtual].reg2, "");
-    strcpy(instrucao[linhaAtual].regD, "");
+    strcpy(instrucao[linhaAtual].instruc, "slt");
+    indice = parametro(linha, indice);
+
+    char aux[5];
+    sprintf(aux, "$%d,", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].reg1, aux);
+
+    indice = parametro(linha, indice);
+
+    sprintf(aux, "$%d,", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].reg2, aux);
+
+    ultimo_parametro(linha, indice);
+
+    sprintf(aux, "$%d", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].regD, aux);
 }
 
 void add(char *linha, int indice){
@@ -673,10 +722,6 @@ void load_varg(char *linha, int indice){
     strcpy(instrucao[linhaAtual].reg1, "$0,");
 }
 
-void limpa(char *linha, int indice){
-    strcpy(instrucao[linhaAtual].instruc, "clear");
-}
-
 void jumpMain(char *linha, int indice){
     strcpy(instrucao[linhaAtual].instruc, "jmain");
 }
@@ -687,6 +732,20 @@ void halt(char *linha, int indice){
 
 void nop(char *linha, int indice){
     strcpy(instrucao[linhaAtual].instruc, "nop");
+}
+
+void move(char *linha, int indice){
+    strcpy(instrucao[linhaAtual].instruc, "move");
+    indice = parametro(linha, indice);
+
+    char aux[5];
+    sprintf(aux, "$%d,", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].reg1, aux);
+
+    indice = parametro(linha, indice);
+
+    sprintf(aux, "$%d", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].reg2, aux);
 }
 
 void escreveNoArquivo(){
@@ -739,16 +798,19 @@ void nome_instrucao(char *read){
     i++;
     instruc[j] = '\0';
 
-    if (strcmp(instruc, "CONST") == 0){
+    if (strcmp(instruc, "LI") == 0){
         addi(read, i);
 
-    } else if (strcmp(instruc, "GOTO") == 0){
+    } else if (strcmp(instruc, "JUMP") == 0){
         jump(read, i);
+
+    } else if (strcmp(instruc, "SUBI") == 0){
+        subi(read, i);
 
     } else if (strcmp(instruc, "LABEL") == 0){
         label(read, i);
 
-    } else if (strcmp(instruc, "FUNC") == 0){
+    } else if (strcmp(instruc, "NOP") == 0){
         funcao(read, i);
 
     } else if (strcmp(instruc, "LOAD") == 0){
@@ -762,33 +824,33 @@ void nome_instrucao(char *read){
 
     } else if (strcmp(instruc, "CALL_OUT") == 0){
         callOut(read, i);
+    
+    } else if (strcmp(instruc, "CALL_IN") == 0){
+        callIn(read, i);
 
-    } else if (strcmp(instruc, "IF") == 0){
-        if_conditional(read, i);
-
-    } else if (strcmp(instruc, "DIF") == 0){
+    } else if (strcmp(instruc, "BNE") == 0){
         branchNE(read, i);
 
-    } else if (strcmp(instruc, "IGUAL") == 0){
+    } else if (strcmp(instruc, "BEQ") == 0){
         branchEQ(read, i);
 
+    } else if (strcmp(instruc, "IGUAL") == 0){
+        set(read, i);
+
     } else if (strcmp(instruc, "MAIORIG") == 0){
-        branchGE(read, i);
+        sbte(read, i);
 
     } else if (strcmp(instruc, "MAIOR") == 0){
-        branchGT(read, i);
+        sbt(read, i);
 
     } else if (strcmp(instruc, "MENORIG") == 0){
-        branchLE(read, i);
+        slte(read, i);
 
     } else if (strcmp(instruc, "MENOR") == 0){
-        branchLT(read, i);
+        slt(read, i);
 
-    } else if (strcmp(instruc, "END") == 0){
+    } else if (strcmp(instruc, "JUMP_REG") == 0){
         linhaAtual--;
-
-    } else if (strcmp(instruc, "RETURN") == 0){
-        ret(read, i);
 
     } else if (strcmp(instruc, "ADD") == 0){
         add(read, i);
@@ -808,20 +870,11 @@ void nome_instrucao(char *read){
     } else if (strcmp(instruc, "ALLOC_V") == 0){
         alloc(read, i);
 
-    } else if (strcmp(instruc, "PARAM") == 0){
-        arg(read, i);
-
-    } else if (strcmp(instruc, "ARG") == 0){
-        param(read, i);
-
     } else if (strcmp(instruc, "LOAD_VARG") == 0){
         load_varg(read, i);
 
     } else if (strcmp(instruc, "LOAD_V") == 0){
         load_v(read, i);
-
-    } else if (strcmp(instruc, "CLEAR") == 0){
-        limpa(read, i);
 
     } else if (strcmp(instruc, "JUMP_MAIN") == 0){
         jumpMain(read, i);
@@ -829,8 +882,8 @@ void nome_instrucao(char *read){
     } else if (strcmp(instruc, "HALT") == 0){
         halt(read, i);
 
-    } else if (strcmp(instruc, "NOP") == 0){
-        nop(read, i);
+    } else if (strcmp(instruc, "MOVE") == 0){
+        move(read, i);
 
     } else {
         strcpy(instrucao[linhaAtual].instruc, instruc);

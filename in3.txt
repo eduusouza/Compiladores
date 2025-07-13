@@ -1,10 +1,10 @@
 void main(void)
 {
    int x; int y;
-   x = 1; 
-   y = 2;
+   x = input(); 
+   y = input();
    if (x>y)
-       return x;
+       output(x);
    else
-        return y;
+        output(y);
 }

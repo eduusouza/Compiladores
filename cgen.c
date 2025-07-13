@@ -7,6 +7,7 @@ static int temporario = 0;
 static int label = 0;
 static int nextSibling = 1;
 static int labelEscopoActual = 0;
+static int nparams = 0;
 
 int analyzeNode(TreeNode *no);
 int analyzeNodeCall(TreeNode *no);
@@ -23,6 +24,7 @@ static int generateStmt(TreeNode *no){
    int startWhile, finishWhile;
    char *name;
    TreeNode *irmao;
+   TreeNode *auxTree;
 
    switch (no->kind.stmt){
       case While_StmtK:
@@ -37,13 +39,13 @@ static int generateStmt(TreeNode *no){
 
          op = analyzeNode(no->child[0]); // checa condição oposta
 
-         printf("(IF,$t%d,L%d,-)\n", op, finishWhile); // fim do while
-         fprintf(arquivoIntermediario, "(IF,$t%d,L%d,-)\n", op, finishWhile);    // fim do while
+         printf("(BNE,$t%d,$zero,L%d)\n", op, finishWhile); // fim do while
+         fprintf(arquivoIntermediario, "(BNE,$t%d,$zero,L%d)\n", op, finishWhile);    // fim do while
 
          ret = analyzeNode(no->child[1]); // executa a parte de dentro do while
 
-         printf("(GOTO,L%d,-,-)\n", startWhile); // volta para o inicio para checar a condição de novo
-         fprintf(arquivoIntermediario, "(GOTO,L%d,-,-)\n", startWhile);    // volta para o inicio para checar a condição de novo
+         printf("(JUMP,L%d,-,-)\n", startWhile); // volta para o inicio para checar a condição de novo
+         fprintf(arquivoIntermediario, "(JUMP,L%d,-,-)\n", startWhile);    // volta para o inicio para checar a condição de novo
 
          printf("(LABEL,L%d,-,-)\n", finishWhile); // label do fim do while
          fprintf(arquivoIntermediario, "(LABEL,L%d,-,-)\n", finishWhile);    // label do fim do while
@@ -80,14 +82,14 @@ static int generateStmt(TreeNode *no){
          ret = analyzeNode(no->child[0]);
 
          // condição análoga = TRUE, GOTO Else
-         printf("(IF,$t%d,L%d,-)\n", ret, label);
-         fprintf(arquivoIntermediario, "(IF,$t%d,L%d,-)\n", ret, label);
+         printf("(BNE,$t%d,$zero,L%d)\n", ret, label);
+         fprintf(arquivoIntermediario, "(BNE,$t%d,$zero,L%d)\n", ret, label);
 
          // entra no bloco if
          analyzeNode(no->child[1]);
          // Define fim da função (return ou não)
-         printf("(GOTO,L%d,-,-)\n", label + 1);
-         fprintf(arquivoIntermediario, "(GOTO,L%d,-,-)\n", label + 1);
+         printf("(JUMP,L%d,-,-)\n", label + 1);
+         fprintf(arquivoIntermediario, "(JUMP,L%d,-,-)\n", label + 1);
 
          // marca o começo do else
          printf("(LABEL,L%d,-,-)\n", label); // bloco else
@@ -120,18 +122,18 @@ static int generateStmt(TreeNode *no){
          temporario = 0;
          switch (no->type){
             case Integer_ExpT:
-               printf("(FUNC,int,%s,-)\n", no->attr.name);
-               fprintf(arquivoIntermediario, "(FUNC,int,%s,-)\n", no->attr.name);
+               printf("(NOP,%s,-,-)\n", no->attr.name);
+               fprintf(arquivoIntermediario, "(NOP,%s,-,-)\n", no->attr.name);
                break;
 
             case Void_ExpT:
-               printf("(FUNC,void,%s,-)\n", no->attr.name);
-               fprintf(arquivoIntermediario, "(FUNC,void,%s,-)\n", no->attr.name);
+               printf("(NOP,%s,-,-)\n", no->attr.name);
+               fprintf(arquivoIntermediario, "(NOP,%s,-,-)\n", no->attr.name);
                break;
 
             case Boolean_ExpT:
-               printf("(FUNC,bool,%s,-)\n", no->attr.name);
-               fprintf(arquivoIntermediario, "(FUNC,bool,%s,-)\n", no->attr.name);
+               printf("(NOP,%s,-,-)\n", no->attr.name);
+               fprintf(arquivoIntermediario, "(NOP,%s,-,-)\n", no->attr.name);
                break;
 
             default:
@@ -141,29 +143,23 @@ static int generateStmt(TreeNode *no){
          analyzeNode(no->child[0]); // args
          analyzeNode(no->child[1]); // interior da função
 
-         printf("(END,%s,-,-)\n", no->attr.name);
-         fprintf(arquivoIntermediario, "(END,%s,-,-)\n", no->attr.name);
+         printf("(JUMP_REG,$ra,-,-)\n");
+         fprintf(arquivoIntermediario, "(JUMP_REG,$ra,-,-)\n");
          break;
 
       case Parametro_StmtK:
          // controla o tipo do nó
          switch (no->type){
             case Integer_ExpT:
-               printf("(PARAM,int,%s,%s)\n", no->attr.name, no->attr.escopo);
-               fprintf(arquivoIntermediario, "(PARAM,int,%s,%s)\n", no->attr.name, no->attr.escopo);
-
-               printf("(LOAD,$t%d,%s,-)\n", temporario, no->attr.name);
-               fprintf(arquivoIntermediario, "(LOAD,$t%d,%s,-)\n", temporario, no->attr.name);
-               temporario++;
+               printf("(STORE,$a%d,%s,$zero)\n", nparams, no->attr.name);
+               fprintf(arquivoIntermediario, "(STORE,$a%d,%s,$zero)\n", nparams, no->attr.name);
+               nparams++;
                break;
 
             case Boolean_ExpT:
-               printf("(PARAM,bool,%s,%s)\n", no->attr.name, no->attr.escopo);
-               fprintf(arquivoIntermediario, "(PARAM,bool,%s,%s)\n", no->attr.name, no->attr.escopo);
-
-               printf("(LOAD,$t%d,%s,-)\n", temporario, no->attr.name);
-               fprintf(arquivoIntermediario, "(LOAD,$t%d,%s,-)\n", temporario, no->attr.name);
-               temporario++;
+               printf("(STORE,$a%d,%s,$zero)\n", nparams, no->attr.name);
+               fprintf(arquivoIntermediario, "(STORE,$a%d,%s,$zero)\n", nparams, no->attr.name);
+               nparams++;
                break;
 
             default:
@@ -183,37 +179,47 @@ static int generateStmt(TreeNode *no){
             }
          } else {
             if (no->child[0] != NULL){
-               // empilha o endereço de retorno ($ra)
 
-               fprintf(arquivoIntermediario, "(CONST,$t%d,PC,-)\n", temporario);
-
-               fprintf(arquivoIntermediario, "(STORE,$t%d,0,$sp)\n", temporario++);
-
-               fprintf(arquivoIntermediario, "(CONST,$t%d,1,-)\n", temporario);
-
-               fprintf(arquivoIntermediario, "(ADD,$sp,$t%d,$sp)\n", temporario++);
                printf("\n analyzeNodeCall A SEGUIR \n");
                param = analyzeNodeCall(no->child[0]);
                printf("\n Depois analyzeNodeCall \n");
-               printf("(ARG,$t%d,-,-)\n", param);
-               fprintf(arquivoIntermediario, "(ARG,$t%d,-,-)\n", param);
+               printf("(STORE,$s%d,%s,$sp)\n", temporario, no->child[0]->attr.name);
+               printf("(LI,$sp,1,$sp)\n");
+               fprintf(arquivoIntermediario, "(STORE,$s%d,%s,$sp)\n", temporario, no->child[0]->attr.name);
+               fprintf(arquivoIntermediario, "(LI,$sp,1,$sp)\n");
+               printf("(MOVE,$t%d,$a%d,-)\n", param, cont);
+               fprintf(arquivoIntermediario, "(MOVE,$t%d,$a%d,-)\n", param, cont);
                cont++;
                irmao = no->child[0]->sibling;
                while (irmao != NULL){
                   param = analyzeNodeCall(irmao);
-                  printf("(ARG,$t%d,-,-)\n", param);
-                  fprintf(arquivoIntermediario, "(ARG,$t%d,-,-)\n", param);
+                  printf("(STORE,$s%d,%s,$sp)\n", temporario, irmao->attr.name);
+                  printf("(LI,$sp,1,$sp)\n");
+                  fprintf(arquivoIntermediario, "(STORE,$s%d,%s, $sp)\n", temporario, irmao->attr.name);
+                  fprintf(arquivoIntermediario, "(LI,$sp,1,$sp)\n");
+                  printf("(MOVE,$t%d,$a%d,-)\n", param, cont);
+                  fprintf(arquivoIntermediario, "(MOVE,$t%d,$a%d,-)\n", param,cont);
                   cont++;
                   irmao = irmao->sibling;
                }
             }
-            printf("(CALL,$t%d,%s,%d)\n", temporario, name, cont);
-            fprintf(arquivoIntermediario, "(CALL,$t%d,%s,%d)\n", temporario, name, cont);
+            if (strcmp(no->attr.name, "input") == 0){
+               printf("(CALL_IN,$t%d,-,-)\n", temporario);
+               fprintf(arquivoIntermediario, "(CALL_IN,$t%d,-,-)\n", temporario);
+            } else {
+               printf("(CALL,$t%d,%s,%d)\n", temporario, name, cont);
+               fprintf(arquivoIntermediario, "(CALL,$t%d,%s,%d)\n", temporario, name, cont);
+            }
 
+            auxTree = no->child[0];
+            for (int i = cont - 1; i >= 0; i--) {
+               printf("(POP,$sp,%s,-)\n", auxTree->attr.name);
+               fprintf(arquivoIntermediario, "(POP,$sp,%s,-)\n", auxTree->attr.name);
+               if (auxTree->sibling != NULL) {
+                  auxTree = auxTree->sibling;
+               }
+            }   
             nextSibling = 1;
-
-            printf("(ADD,$v0,-,$t%d)\n", temporario);
-            fprintf(arquivoIntermediario, "(ADD,$v0,-,$t%d)\n", temporario);
          }
 
          return temporario++;
@@ -228,16 +234,8 @@ static int generateStmt(TreeNode *no){
          printf("(ADD,$t%d,-,$v0)\n", temporario);
          fprintf(arquivoIntermediario, "(ADD,$t%d,-,$v0)\n", temporario);
 
-         temporario++;
-
-         fprintf(arquivoIntermediario, "(CONST,$t%d,1,-)\n", temporario);
-         fprintf(arquivoIntermediario, "(SUB,$sp,$t%d,$sp)\n", temporario++);
-         fprintf(arquivoIntermediario, "(LOAD,$ra,0,$sp)\n");
-
-         printf("(RETURN,$v0,-,-)\n");
-         fprintf(arquivoIntermediario, "(RETURN,$v0,-,-)\n");
-
          temporario = 0;
+         nparams = 0;
          break;
 
       default:
@@ -276,8 +274,8 @@ static int generateExp(TreeNode *no){
             break;
 
          case COMP:
-            printf("(DIF,$t%d,$t%d,$t%d)\n", param1, param2, temporario);
-            fprintf(arquivoIntermediario, "(DIF,$t%d,$t%d,$t%d)\n", param1, param2, temporario);
+            printf("(IGUAL,$t%d,$t%d,$t%d)\n", param1, param2, temporario);
+            fprintf(arquivoIntermediario, "(IGUAL,$t%d,$t%d,$t%d)\n", param1, param2, temporario);
             break;
 
          case DIF:
@@ -312,8 +310,8 @@ static int generateExp(TreeNode *no){
          break;
 
       case Constante_ExpK:
-         printf("(CONST,$t%d,%d,-)\n", temporario, no->attr.val);
-         fprintf(arquivoIntermediario, "(CONST,$t%d,%d,-)\n", temporario, no->attr.val);
+         printf("(LI,$t%d,%d,-)\n", temporario, no->attr.val);
+         fprintf(arquivoIntermediario, "(LI,$t%d,%d,-)\n", temporario, no->attr.val);
          return temporario++;
          break;
 
@@ -394,7 +392,7 @@ int analyzeNodeCall(TreeNode *no){
                   printf("\n antes charverifica\n");
                   if (strcmp(CharVerificaOcorrenciaNoMesmoEscopo(no->attr.name, "Global", "tipoParametro"), "nao") == 0 ||
                      strcmp(CharVerificaOcorrenciaNoMesmoEscopo(no->attr.name, no->attr.escopo, "tipoParametro"), "nao") == 0){
-                     fprintf(arquivoIntermediario, "(CONST,$t%d,%s,-)\n", temporario, no->attr.name);
+                     fprintf(arquivoIntermediario, "(LI,$t%d,%s,-)\n", temporario, no->attr.name);
                   } else {
                      fprintf(arquivoIntermediario, "(LOAD,$t%d,%s,-)\n", temporario, no->attr.name); // load com offset
                   }
@@ -419,12 +417,7 @@ int analyzeNodeCall(TreeNode *no){
 
 void geraIntermediario(TreeNode *no){
 
-   fprintf(arquivoIntermediario, "CODIGO INTERMEDIARIO:\n");
-
-   fprintf(arquivoIntermediario, "(NOP,-,-,-)\n");
-   fprintf(arquivoIntermediario, "(CONST,$sp,500,-)\n");
    fprintf(arquivoIntermediario, "(JUMP_MAIN,-,-,-)\n");
-
    analyzeNode(no);
    
    fprintf(arquivoIntermediario, "(HALT,-,-,-)\n");

@@ -1,26 +1,17 @@
-nop 
-addi $0,$28,500
-jmain 4
+jmain 2
 sw $0,0($0)	//main
 sw $0,1($0)
-addi $0,$8,1
+input $8
 sw $8,0($0)
-addi $0,$8,2
+input $8
 sw $8,1($0)
 lw $8,0($0)
 lw $9,1($0)
-ble $8,$9,20
+slte $8,$9,$10
+bne $10,$0,15
 lw $11,0($0)
-add $11,$0,$2
-addi $0,$12,1
-sub $28,$12,$28
-lw $31,0($28)
-jr $ra
-jump 26
-lw $8,1($0)	//L0
-add $8,$0,$2
-addi $0,$9,1
-sub $28,$9,$28
-lw $31,0($28)
-jr $ra
+output $11
+jump 17
+lw $13,1($0)	//L0
+output $13
 halt 	//L1

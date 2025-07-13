@@ -22,15 +22,15 @@ char registrador[10];
 
 // ARRUMAR VALORES DOS REGISTRADORES COM O PROCESSADOR/RELATORIO
 typedef enum{
-    $zero,
-    $at,
-    $v0,
-    $v1,
-    $a0,
+    $zero,  // Valor zero inalterado
+    $r0,    // Pilha de chamada de funcao
+    $a0,    // Argumentos de funcao
     $a1,
     $a2,
     $a3,
-    $t0,
+    $a4,
+    $a5,
+    $t0,    // Registradores temporarios
     $t1,
     $t2,
     $t3,
@@ -42,18 +42,18 @@ typedef enum{
     $t9,
     $t10,
     $t11,
-    $t12,
-    $t13,
-    $t14,
-    $t15,
-    $t16,
-    $t17,
-    $t18,
-    $t19,
-    $sp,
-    $hi,
-    $lo,
-    $ra
+    $s0,    // Salvar acessos de memoria
+    $s1,
+    $s2,
+    $s3,
+    $s4,
+    $s5,
+    $s6,
+    $s7,
+    $s8,
+    $ra,
+    $v0,
+    $sp
 } banco_regs;
 
 int linhaMain;
