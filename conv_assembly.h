@@ -7,6 +7,7 @@ typedef struct{
     char reg2[5];
     char regD[5];
     char label[11];
+    char func[20];
 } ASSEMBLY;
 
 ASSEMBLY *instrucao;

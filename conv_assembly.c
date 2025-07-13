@@ -48,24 +48,31 @@ void labels(){
                 strcpy(instrucao[i].reg1, aux2);
             }
 
-        } else if (strcmp(instrucao[i].instruc, "jmain") == 0){
+        } else if (strcmp(instrucao[i].instruc, "jfunc") == 0){
             char aux[5];
-            sprintf(aux, "%d", linhaMain);
+            
+            j = 0;
+            while (strcmp(posicaoLabel[j].name, instrucao[i].func) != 0){
+               j++;
+            }
+    
+            sprintf(aux, "%d", posicaoLabel[j].posicao);
             strcpy(instrucao[i].reg1, aux);
 
         } else if (strcmp(instrucao[i].instruc, "bne") == 0 ||
         strcmp(instrucao[i].instruc, "beq") == 0){
-
+            
             j = 1;
             while (instrucao[i].regD[j] != '\0'){
                 aux[j - 1] = instrucao[i].regD[j];
                 j++;
             }
-
+            
             aux[j] = '\0';
             char aux2[10];
             sprintf(aux2, "%d", posicaoRetornoLabel[atoi(aux)]);
             strcpy(instrucao[i].regD, aux2);
+            
         }
     }
 }
@@ -241,6 +248,19 @@ void jump(char *linha, int indice){
     strcpy(instrucao[linhaAtual].regD, "");
 }
 
+void jump_reg(char *linha, int indice){
+
+    strcpy(instrucao[linhaAtual].instruc, "jreg");
+    char aux[5];
+
+    indice = parametro(linha, indice);
+
+    sprintf(aux, "$%d", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].reg1, aux);
+    strcpy(instrucao[linhaAtual].reg2, "");
+    strcpy(instrucao[linhaAtual].regD, "");
+}
+
 void label(char *linha, int indice){
     int j = 0, i;
 
@@ -251,6 +271,7 @@ void label(char *linha, int indice){
     registrador[j] = '\0';
 
     posicaoRetornoLabel[atoi(registrador)] = linhaAtual;
+
     indice = parametro(linha, indice);
     strcpy(instrucao[linhaAtual].label, registrador);
     linhaAtual--;
@@ -367,9 +388,13 @@ void store(char *linha, int indice){
 void call(char *linha, int indice){
     char aux[5];
 
-    strcpy(instrucao[linhaAtual].instruc, "jal");
+    strcpy(instrucao[linhaAtual].instruc, "addi");
 
     indice = parametro(linha, indice);
+
+    sprintf(aux, "$%d,", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].reg1, aux);
+
     indice = parametro(linha, indice);
 
     int i = 0;
@@ -377,10 +402,13 @@ void call(char *linha, int indice){
         i++;
     }
     
-    sprintf(aux, "%d", posicaoLabel[i].posicao);
-    strcpy(instrucao[linhaAtual].reg1, aux);
-    strcpy(instrucao[linhaAtual].reg2, "");
-    strcpy(instrucao[linhaAtual].regD, "");
+    sprintf(aux, "%d,", posicaoLabel[i].posicao);
+    strcpy(instrucao[linhaAtual].reg2, aux);
+
+    ultimo_parametro(linha, indice);
+
+    sprintf(aux, "($%d)", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].regD, aux);
 
     contaQtdArgumento = contaQtdParametros;
     contaQtdParametros = 0;
@@ -426,7 +454,8 @@ void branchNE(char *linha, int indice){
     sprintf(aux, "$%d,", buscaValorEnderecoRegistrador(registrador));
     strcpy(instrucao[linhaAtual].reg2, aux);
 
-    strcpy(instrucao[linhaAtual].regD, "");
+    ultimo_parametro(linha, indice);
+    strcpy(instrucao[linhaAtual].regD, registrador);
 }
 
 void branchEQ(char *linha, int indice){
@@ -443,7 +472,8 @@ void branchEQ(char *linha, int indice){
     sprintf(aux, "$%d,", buscaValorEnderecoRegistrador(registrador));
     strcpy(instrucao[linhaAtual].reg2, aux);
 
-    strcpy(instrucao[linhaAtual].regD, "");
+    ultimo_parametro(linha, indice);
+    strcpy(instrucao[linhaAtual].regD, registrador);
 }
 
 void set(char *linha, int indice){
@@ -722,8 +752,13 @@ void load_varg(char *linha, int indice){
     strcpy(instrucao[linhaAtual].reg1, "$0,");
 }
 
-void jumpMain(char *linha, int indice){
-    strcpy(instrucao[linhaAtual].instruc, "jmain");
+void jumpFunction(char *linha, int indice){
+    char aux[20];
+
+    strcpy(instrucao[linhaAtual].instruc, "jfunc");
+
+    indice = parametro(linha, indice);
+    strcpy(instrucao[linhaAtual].func, registrador);
 }
 
 void halt(char *linha, int indice){
@@ -804,6 +839,9 @@ void nome_instrucao(char *read){
     } else if (strcmp(instruc, "JUMP") == 0){
         jump(read, i);
 
+    } else if (strcmp(instruc, "JUMP_REG") == 0){
+        jump_reg(read, i);
+
     } else if (strcmp(instruc, "SUBI") == 0){
         subi(read, i);
 
@@ -849,8 +887,8 @@ void nome_instrucao(char *read){
     } else if (strcmp(instruc, "MENOR") == 0){
         slt(read, i);
 
-    } else if (strcmp(instruc, "JUMP_REG") == 0){
-        linhaAtual--;
+//    } else if (strcmp(instruc, "JUMP_REG") == 0){
+//        linhaAtual--;
 
     } else if (strcmp(instruc, "ADD") == 0){
         add(read, i);
@@ -876,8 +914,8 @@ void nome_instrucao(char *read){
     } else if (strcmp(instruc, "LOAD_V") == 0){
         load_v(read, i);
 
-    } else if (strcmp(instruc, "JUMP_MAIN") == 0){
-        jumpMain(read, i);
+    } else if (strcmp(instruc, "JUMP_FUNC") == 0){
+        jumpFunction(read, i);
 
     } else if (strcmp(instruc, "HALT") == 0){
         halt(read, i);
