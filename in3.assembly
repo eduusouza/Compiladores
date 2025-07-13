@@ -1,4 +1,4 @@
-jmain 2
+jfunc 2
 sw $0,0($0)	//main
 sw $0,1($0)
 input $8
@@ -14,4 +14,4 @@ output $11
 jump 17
 lw $13,1($0)	//L0
 output $13
-halt 	//L1
+halt 	//L1

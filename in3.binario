@@ -1,0 +1,17 @@
+Memoria[0] = {6'd5, 26'd1}; //jump func 
+Memoria[1] = {6'd7, 5'd0, 5'd0, 16'd0}; // sw
+Memoria[2] = {6'd7, 5'd0, 5'd0, 16'd1}; // sw
+Memoria[3] = {6'd8, 5'd0, 5'd8, 16'd0}; //input
+Memoria[4] = {6'd7, 5'd0, 5'd8, 16'd0}; // sw
+Memoria[5] = {6'd8, 5'd0, 5'd8, 16'd0}; //input
+Memoria[6] = {6'd7, 5'd0, 5'd8, 16'd1}; // sw
+Memoria[7] = {6'd6, 5'd0, 5'd8, 16'd0}; // lw
+Memoria[8] = {6'd6, 5'd0, 5'd9, 16'd1}; // lw
+Memoria[9] = {6'd14, 5'd8, 5'd9, 5'd10, 16'd0}; // slte
+Memoria[10] = {6'd11, 5'd10, 5'd0, 16'd14}; // bne
+Memoria[11] = {6'd6, 5'd0, 5'd11, 16'd0}; // lw
+Memoria[12] = {6'd9, 5'd11, 5'd0, 16'd0}; //output
+Memoria[13] = {6'd5, 26'd16}; // jump
+Memoria[14] = {6'd6, 5'd0, 5'd13, 16'd1}; // lw
+Memoria[15] = {6'd9, 5'd13, 5'd0, 16'd0}; //output
+Memoria[16] = {6'd13, 26'd0}; // halt

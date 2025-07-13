@@ -218,6 +218,8 @@ static int generateStmt(TreeNode *no){
                fprintf(arquivoIntermediario, "(LI,$ra,1,$ra)\n");
                printf("(JUMP_FUNC,%s,-,-)\n", name);
                fprintf(arquivoIntermediario, "(JUMP_FUNC,%s,-,-)\n", name);
+               printf("(MOVE,$v0,$t%d,-)\n", temporario);
+               fprintf(arquivoIntermediario, "(MOVE,$v0,$t%d,-)\n", temporario);
             }
 
             auxTree = no->child[0];
@@ -242,6 +244,9 @@ static int generateStmt(TreeNode *no){
 
          printf("(ADD,$t%d,-,$v0)\n", temporario);
          fprintf(arquivoIntermediario, "(ADD,$t%d,-,$v0)\n", temporario);
+
+         printf("(JUMP_REG,$ra,-,-)\n");
+         fprintf(arquivoIntermediario, "(JUMP_REG,$ra,-,-)\n");
 
          temporario = 0;
          nparams = 0;

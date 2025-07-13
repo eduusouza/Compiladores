@@ -1,4 +1,4 @@
-(JUMP_MAIN,-,-,-)
+(JUMP_FUNC,main,-,-)
 (NOP,main,-,-)
 (ALLOC,x,main,-)
 (ALLOC,y,main,-)
@@ -17,5 +17,4 @@
 (LOAD,$t5,y,-)
 (CALL_OUT,$t5,output,-)
 (LABEL,L1,-,-)
-(JUMP_REG,$ra,-,-)
 (HALT,-,-,-)

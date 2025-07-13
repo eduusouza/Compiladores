@@ -117,6 +117,36 @@ int main(int argc, char *argv[])
     fclose(arquivoIntermediario);
     fclose(arquivoAssembly);
 
+    // Gerador de código binario
+    char *binario;
+
+    tamanho = strcspn(nomeArquivo, ".");
+
+    binario = (char *)calloc(tamanho + 4, sizeof(char));
+    strncpy(binario, nomeArquivo, tamanho);
+    strcat(binario, ".binario");
+
+    arquivoBinario = fopen(binario, "w");
+
+    if (arquivoBinario == NULL)
+    {
+      printf("Não foi possível abrir o binario %s\n", binario);
+      exit(1);
+    }
+
+    arquivoAssembly = fopen(assembly, "r");
+    
+    if (arquivoAssembly == NULL)
+    {
+      printf("Não foi possível abrir o assembly %s\n", assembly);
+      exit(1);
+    }
+
+    geraBinario();
+
+    fclose(arquivoBinario);
+    fclose(arquivoAssembly);
+
     printf("\nCódigo finalizado\n");
 
     printf("\nFIM\n");

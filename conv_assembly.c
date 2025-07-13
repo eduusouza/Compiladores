@@ -221,7 +221,7 @@ void addi(char *linha, int indice){
 void subi(char *linha, int indice){
     char aux[5];
 
-    strcpy(instrucao[linhaAtual].instruc, "addi");
+    strcpy(instrucao[linhaAtual].instruc, "subi");
 
     indice = parametro(linha, indice);
 
@@ -407,7 +407,7 @@ void call(char *linha, int indice){
 
     ultimo_parametro(linha, indice);
 
-    sprintf(aux, "($%d)", buscaValorEnderecoRegistrador(registrador));
+    sprintf(aux, "$zero", buscaValorEnderecoRegistrador(registrador));
     strcpy(instrucao[linhaAtual].regD, aux);
 
     contaQtdArgumento = contaQtdParametros;
@@ -886,9 +886,6 @@ void nome_instrucao(char *read){
 
     } else if (strcmp(instruc, "MENOR") == 0){
         slt(read, i);
-
-//    } else if (strcmp(instruc, "JUMP_REG") == 0){
-//        linhaAtual--;
 
     } else if (strcmp(instruc, "ADD") == 0){
         add(read, i);
