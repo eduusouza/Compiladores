@@ -436,6 +436,7 @@ void geraIntermediario(TreeNode *no){
    fprintf(arquivoIntermediario, "(LI,$ra,50,-)\n");
    fprintf(arquivoIntermediario, "(LI,$sp,100,-)\n");
    fprintf(arquivoIntermediario, "(JUMP_FUNC,main,-,-)\n");
+   
    analyzeNode(no);
    
    fprintf(arquivoIntermediario, "(HALT,-,-,-)\n");
