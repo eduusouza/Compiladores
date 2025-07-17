@@ -120,6 +120,7 @@ static int generateStmt(TreeNode *no){
 
       case Funcao_StmtK:
          temporario = 0;
+
          switch (no->type){
             case Integer_ExpT:
                printf("(NOP,%s,-,-)\n", no->attr.name);
@@ -191,22 +192,30 @@ static int generateStmt(TreeNode *no){
                printf("\n analyzeNodeCall A SEGUIR \n");
                param = analyzeNodeCall(no->child[0]);
                printf("\n Depois analyzeNodeCall \n");
-               //printf("(STORE,$s%d,%s,$sp)\n", temporario, no->child[0]->attr.name);
-               //printf("(LI,$sp,1,$sp)\n");
-               //fprintf(arquivoIntermediario, "(STORE,$s%d,%s,$sp)\n", temporario, no->child[0]->attr.name);
-               //fprintf(arquivoIntermediario, "(LI,$sp,1,$sp)\n");
                printf("(MOVE,$t%d,$a%d,-)\n", param, cont);
                fprintf(arquivoIntermediario, "(MOVE,$t%d,$a%d,-)\n", param, cont);
+               
+               if (isRecursive){
+                  printf("(STORE,$t%d,0,$sp)\n", param);
+                  printf("(LI,$sp,1,$sp)\n");
+                  fprintf(arquivoIntermediario, "(STORE,$t%d,0,$sp)\n", param);
+                  fprintf(arquivoIntermediario, "(LI,$sp,1,$sp)\n");
+               }
+
                cont++;
                irmao = no->child[0]->sibling;
                while (irmao != NULL){
                   param = analyzeNodeCall(irmao);
-                  //printf("(STORE,$s%d,%s,$sp)\n", temporario, irmao->attr.name);
-                  //printf("(LI,$sp,1,$sp)\n");
-                  //fprintf(arquivoIntermediario, "(STORE,$s%d,%s, $sp)\n", temporario, irmao->attr.name);
-                  //fprintf(arquivoIntermediario, "(LI,$sp,1,$sp)\n");
                   printf("(MOVE,$t%d,$a%d,-)\n", param, cont);
                   fprintf(arquivoIntermediario, "(MOVE,$t%d,$a%d,-)\n", param,cont);
+                  
+                  if (isRecursive){
+                     printf("(STORE,$t%d,0,$sp)\n", param);
+                     printf("(LI,$sp,1,$sp)\n");
+                     fprintf(arquivoIntermediario, "(STORE,$t%d,0,$sp)\n", param);
+                     fprintf(arquivoIntermediario, "(LI,$sp,1,$sp)\n");
+                  } 
+
                   cont++;
                   irmao = irmao->sibling;
                }
@@ -223,17 +232,20 @@ static int generateStmt(TreeNode *no){
                fprintf(arquivoIntermediario, "(LI,$ra,1,$ra)\n");
                printf("(JUMP_FUNC,%s,-,-)\n", name);
                fprintf(arquivoIntermediario, "(JUMP_FUNC,%s,-,-)\n", name);
+
+               if (isRecursive) {
+                  auxTree = no->child[0];
+                  for (int i = cont - 1; i >= 0; i--) {
+                     printf("(POP,$sp,%s,-)\n", auxTree->attr.name);
+                     fprintf(arquivoIntermediario, "(POP,$sp,%s,-)\n", auxTree->attr.name);
+                     if (auxTree->sibling != NULL) {
+                        auxTree = auxTree->sibling;
+                     }
+                  }
+               }
+
                printf("(MOVE,$v0,$t%d,-)\n", temporario);
                fprintf(arquivoIntermediario, "(MOVE,$v0,$t%d,-)\n", temporario);
-            }
-
-            auxTree = no->child[0];
-            for (int i = cont - 1; i >= 0; i--) {
-               //printf("(POP,$sp,%s,-)\n", auxTree->attr.name);
-               //fprintf(arquivoIntermediario, "(POP,$sp,%s,-)\n", auxTree->attr.name);
-               if (auxTree->sibling != NULL) {
-                  auxTree = auxTree->sibling;
-               }
             }   
             nextSibling = 1;
          }
