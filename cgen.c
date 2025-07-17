@@ -143,9 +143,14 @@ static int generateStmt(TreeNode *no){
          analyzeNode(no->child[0]); // args
          analyzeNode(no->child[1]); // interior da função
 
-         if (strcmp(no->attr.name, "main") == 1) {
-            printf("(JUMP_REG,$ra,-,-)\n");
-            fprintf(arquivoIntermediario, "(JUMP_REG,$ra,-,-)\n");
+         if (strcmp(no->attr.name, "main") != 0) {
+            temporario++;
+            printf("(LOAD,$t%d,0,$ra)\n", temporario);
+            fprintf(arquivoIntermediario, "(LOAD,$t%d,0,$ra)\n", temporario);
+            printf("(SUBI,$ra,1,$ra)\n");
+            fprintf(arquivoIntermediario, "(SUBI,$ra,1,$ra)\n");
+            printf("(JUMP_REG,$t%d,-,-)\n", temporario);
+            fprintf(arquivoIntermediario, "(JUMP_REG,$t%d,-,-)\n", temporario);
          }
          
          break;
@@ -244,14 +249,6 @@ static int generateStmt(TreeNode *no){
 
          printf("(ADD,$t%d,-,$v0)\n", temporario);
          fprintf(arquivoIntermediario, "(ADD,$t%d,-,$v0)\n", temporario);
-
-         temporario++;
-         printf("(LOAD,$t%d,0,$ra)\n", temporario);
-         fprintf(arquivoIntermediario, "(LOAD,$t%d,0,$ra)\n", temporario);
-         printf("(SUBI,$ra,1,$ra)\n");
-         fprintf(arquivoIntermediario, "(SUBI,$ra,1,$ra)\n");
-         printf("(JUMP_REG,$t%d,-,-)\n", temporario);
-         fprintf(arquivoIntermediario, "(JUMP_REG,$t%d,-,-)\n", temporario);
 
          temporario = 0;
          nparams = 0;
