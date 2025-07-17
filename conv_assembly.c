@@ -309,7 +309,7 @@ void load(char *linha, int indice){
     strcpy(instrucao[linhaAtual].reg1, aux);
 
     indice = parametro(linha, indice);
-    
+
     int pos;
 
     if (strcmp(registrador, "0") == 0){
@@ -396,13 +396,8 @@ void call(char *linha, int indice){
     strcpy(instrucao[linhaAtual].reg1, aux);
 
     indice = parametro(linha, indice);
-
-    int i = 0;
-    while (strcmp(posicaoLabel[i].name, registrador) != 0){
-        i++;
-    }
     
-    sprintf(aux, "%d,", posicaoLabel[i].posicao);
+    sprintf(aux, "%d,", linhaAtual + 3);
     strcpy(instrucao[linhaAtual].reg2, aux);
 
     ultimo_parametro(linha, indice);

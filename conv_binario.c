@@ -177,7 +177,7 @@ void instrucaoADDI(char *valorLinha, int valorIndice)
     valorIndice = buscaRegistrador(valorLinha, valorIndice);
     valorR2 = atoi(registradores);
 
-    fprintf(arquivoBinario, "Memoria[%d] = {6'd2, 5'd%d, 5'd%d, 16'd%d}; // addi\n", linhaAtual, valorR2, valorImediato, valorR1);
+    fprintf(arquivoBinario, "Memoria[%d] = {6'd2, 5'd%d, 5'd%d, 16'd%d}; // addi\n", linhaAtual, valorR2, valorR1, valorImediato);
 }
 
 void instrucaoMOVE(char *valorLinha, int valorIndice)
@@ -306,7 +306,7 @@ void instrucaoSLTE(char *valorLinha, int valorIndice)
     valorIndice = buscaRegistrador(valorLinha, valorIndice);
     valorRS = atoi(registradores);
 
-    fprintf(arquivoBinario, "Memoria[%d] = {6'd14, 5'd%d, 5'd%d, 5'd%d, 16'd0}; // slte\n", linhaAtual, valorR1, valorR2, valorRS);
+    fprintf(arquivoBinario, "Memoria[%d] = {6'd14, 5'd%d, 5'd%d, 5'd%d, 11'd0}; // slte\n", linhaAtual, valorR1, valorR2, valorRS);
 }
 
 void instrucaoSBT(char *valorLinha, int valorIndice)
@@ -320,7 +320,7 @@ void instrucaoSBT(char *valorLinha, int valorIndice)
     valorIndice = buscaRegistrador(valorLinha, valorIndice);
     valorRS = atoi(registradores);
 
-    fprintf(arquivoBinario, "Memoria[%d] = {6'd15, 5'd%d, 5'd%d, 5'd%d, 16'd0}; // sbt\n", linhaAtual, valorR1, valorR2, valorRS);
+    fprintf(arquivoBinario, "Memoria[%d] = {6'd15, 5'd%d, 5'd%d, 5'd%d, 11'd0}; // sbt\n", linhaAtual, valorR1, valorR2, valorRS);
 }
 
 void instrucaoSBTE(char *valorLinha, int valorIndice)
@@ -334,7 +334,7 @@ void instrucaoSBTE(char *valorLinha, int valorIndice)
     valorIndice = buscaRegistrador(valorLinha, valorIndice);
     valorRS = atoi(registradores);
 
-    fprintf(arquivoBinario, "Memoria[%d] = {6'd16, 5'd%d, 5'd%d, 5'd%d, 16'd0}; // sbte\n", linhaAtual, valorR1, valorR2, valorRS);
+    fprintf(arquivoBinario, "Memoria[%d] = {6'd16, 5'd%d, 5'd%d, 5'd%d, 11'd0}; // sbte\n", linhaAtual, valorR1, valorR2, valorRS);
 }
 
 void instrucaoSET(char *valorLinha, int valorIndice)
@@ -348,7 +348,7 @@ void instrucaoSET(char *valorLinha, int valorIndice)
     valorIndice = buscaRegistrador(valorLinha, valorIndice);
     valorRS = atoi(registradores);
 
-    fprintf(arquivoBinario, "Memoria[%d] = {6'd17, 5'd%d, 5'd%d, 5'd%d, 16'd0}; // set\n", linhaAtual, valorR1, valorR2, valorRS);
+    fprintf(arquivoBinario, "Memoria[%d] = {6'd17, 5'd%d, 5'd%d, 5'd%d, 11'd0}; // set\n", linhaAtual, valorR1, valorR2, valorRS);
 }
 
 void instrucaoSUBI(char *valorLinha, int valorIndice)

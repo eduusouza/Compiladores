@@ -245,8 +245,13 @@ static int generateStmt(TreeNode *no){
          printf("(ADD,$t%d,-,$v0)\n", temporario);
          fprintf(arquivoIntermediario, "(ADD,$t%d,-,$v0)\n", temporario);
 
-         printf("(JUMP_REG,$ra,-,-)\n");
-         fprintf(arquivoIntermediario, "(JUMP_REG,$ra,-,-)\n");
+         temporario++;
+         printf("(LOAD,$t%d,0,$ra)\n", temporario);
+         fprintf(arquivoIntermediario, "(LOAD,$t%d,0,$ra)\n", temporario);
+         printf("(SUBI,$ra,1,$ra)\n");
+         fprintf(arquivoIntermediario, "(SUBI,$ra,1,$ra)\n");
+         printf("(JUMP_REG,$t%d,-,-)\n", temporario);
+         fprintf(arquivoIntermediario, "(JUMP_REG,$t%d,-,-)\n", temporario);
 
          temporario = 0;
          nparams = 0;
@@ -431,6 +436,8 @@ int analyzeNodeCall(TreeNode *no){
 
 void geraIntermediario(TreeNode *no){
 
+   fprintf(arquivoIntermediario, "(LI,$ra,50,-)\n");
+   fprintf(arquivoIntermediario, "(LI,$sp,100,-)\n");
    fprintf(arquivoIntermediario, "(JUMP_FUNC,main,-,-)\n");
    analyzeNode(no);
    

@@ -1,4 +1,6 @@
-jfunc 2
+addi $29,50,$0
+addi $31,100,$0
+jfunc 4
 sw $0,0($0)	//main
 sw $0,1($0)
 input $8
@@ -8,10 +10,10 @@ sw $8,1($0)
 lw $8,0($0)
 lw $9,1($0)
 slte $8,$9,$10
-bne $10,$0,15
+bne $10,$0,17
 lw $11,0($0)
 output $11
-jump 17
+jump 19
 lw $13,1($0)	//L0
 output $13
-halt 	//L1
+halt 	//L1

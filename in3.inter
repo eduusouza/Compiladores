@@ -1,3 +1,5 @@
+(LI,$ra,50,-)
+(LI,$sp,100,-)
 (JUMP_FUNC,main,-,-)
 (NOP,main,-,-)
 (ALLOC,x,main,-)
