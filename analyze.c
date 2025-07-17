@@ -102,10 +102,11 @@ static void insertTreeNode(TreeNode *no){
 				break;
 
 			case Funcao_StmtK:
+				
 				// escopo nas declarações
 				aux = no->child[1];
 				while (aux != NULL){
-					aux->attr.escopo = no->attr.name;
+					aux->attr.escopo = no->attr.name;					
 					aux = aux->sibling;
 				}
 
@@ -140,6 +141,11 @@ static void insertTreeNode(TreeNode *no){
 					// Não existe a função na tabela
 					DeclaracaoDeErro(no, "A funcao chamada nao existe ou foi declarada erroneamente");
 					break;
+				} else {
+					// Verifica se é recursiva
+					if (strcmp(no->attr.name, no->attr.escopo) == 0){
+						isRecursive = 1;
+					}
 				}
 				if(VerificaEquivalenciaParametrosDaFuncao(no->attr.name, contaQtdArgumentos) != 1  && ((strcmp(no->attr.name, "input") != 0 && strcmp(no->attr.name, "output") != 0))){
 					DeclaracaoDeErro(no, "A quantidade de parametros passado para a função é diferente da quantidade de argumentos que ela necessita.");

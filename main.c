@@ -10,6 +10,7 @@
 #include "util.h"
 
 int lineno = 0;
+int isRecursive = 0;
 
 FILE *source;
 FILE *arquivoIntermediario;

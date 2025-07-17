@@ -33,6 +33,7 @@ extern FILE* arquivoAssembly;
 extern FILE *arquivoBinario;
 
 extern int lineno;
+extern int isRecursive;
 
 typedef enum {
 	Declaracao_NodeK, EXP_NodeK
