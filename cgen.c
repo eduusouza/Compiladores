@@ -151,10 +151,12 @@ static int generateStmt(TreeNode *no){
             temporario++;
             printf("(LOAD,$t%d,0,$ra)\n", temporario);
             fprintf(arquivoIntermediario, "(LOAD,$t%d,0,$ra)\n", temporario);
+            printf("(LOAD,$t%d,0,$t%d\n)", temporario + 1, temporario);
+            fprintf(arquivoIntermediario, "(LOAD,$t%d,0,$t%d)\n", temporario + 1, temporario);
             printf("(SUBI,$ra,1,$ra)\n");
             fprintf(arquivoIntermediario, "(SUBI,$ra,1,$ra)\n");
-            printf("(JUMP_REG,$t%d,-,-)\n", temporario);
-            fprintf(arquivoIntermediario, "(JUMP_REG,$t%d,-,-)\n", temporario);
+            printf("(JUMP_REG,$t%d,-,-)\n", temporario + 1);
+            fprintf(arquivoIntermediario, "(JUMP_REG,$t%d,-,-)\n", temporario + 1);
          }
          
          break;
@@ -183,10 +185,6 @@ static int generateStmt(TreeNode *no){
          nextSibling = 0;
          cont = 0;
          name = no->attr.name;
-
-         printf("call - funcaoAtual: %s\n", funcaoAtual);
-         printf("nome do no: %s\n", no->attr.name);
-         printf("compare: %d\n", strcmp(funcaoAtual, no->attr.name));
 
          if (strcmp(no->attr.name, "output") == 0){
             if (no->child[0] != NULL){
