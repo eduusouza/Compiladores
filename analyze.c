@@ -5,6 +5,7 @@
 #include <string.h>
 
 static int indice = 0;
+static int indiceRecursivas = 0;
 
 char *escopoAtual;
 
@@ -145,6 +146,10 @@ static void insertTreeNode(TreeNode *no){
 					// Verifica se é recursiva
 					if (strcmp(no->attr.name, no->attr.escopo) == 0){
 						isRecursive = 1;
+						recursivas = (RECURSIVE *)realloc(recursivas, sizeof(RECURSIVE) * (indiceRecursivas + 1));
+						strcpy(recursivas[indiceRecursivas].name, no->attr.name);
+						recursivas[indiceRecursivas].posicao = indiceRecursivas;
+						indiceRecursivas++;
 					}
 				}
 				if(VerificaEquivalenciaParametrosDaFuncao(no->attr.name, contaQtdArgumentos) != 1  && ((strcmp(no->attr.name, "input") != 0 && strcmp(no->attr.name, "output") != 0))){

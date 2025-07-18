@@ -35,6 +35,13 @@ extern FILE *arquivoBinario;
 extern int lineno;
 extern int isRecursive;
 
+typedef struct{
+    char name[10];
+    int posicao;
+} RECURSIVE;
+
+extern RECURSIVE *recursivas;
+
 typedef enum {
 	Declaracao_NodeK, EXP_NodeK
 } NodeKind;

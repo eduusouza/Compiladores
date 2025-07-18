@@ -8,6 +8,7 @@ static int label = 0;
 static int nextSibling = 1;
 static int labelEscopoActual = 0;
 static int nparams = 0;
+static char funcaoAtual[40];
 
 int analyzeNode(TreeNode *no);
 int analyzeNodeCall(TreeNode *no);
@@ -121,6 +122,8 @@ static int generateStmt(TreeNode *no){
       case Funcao_StmtK:
          temporario = 0;
 
+         strcpy(funcaoAtual, no->attr.name);
+         
          switch (no->type){
             case Integer_ExpT:
                printf("(NOP,%s,-,-)\n", no->attr.name);
@@ -181,6 +184,10 @@ static int generateStmt(TreeNode *no){
          cont = 0;
          name = no->attr.name;
 
+         printf("call - funcaoAtual: %s\n", funcaoAtual);
+         printf("nome do no: %s\n", no->attr.name);
+         printf("compare: %d\n", strcmp(funcaoAtual, no->attr.name));
+
          if (strcmp(no->attr.name, "output") == 0){
             if (no->child[0] != NULL){
                param = analyzeNodeCall(no->child[0]);
@@ -195,7 +202,7 @@ static int generateStmt(TreeNode *no){
                printf("(MOVE,$t%d,$a%d,-)\n", param, cont);
                fprintf(arquivoIntermediario, "(MOVE,$t%d,$a%d,-)\n", param, cont);
                
-               if (isRecursive){
+               if (isRecursive && strcmp(no->attr.name, funcaoAtual) == 0){
                   printf("(STORE,$t%d,0,$sp)\n", param);
                   printf("(LI,$sp,1,$sp)\n");
                   fprintf(arquivoIntermediario, "(STORE,$t%d,0,$sp)\n", param);
@@ -209,7 +216,7 @@ static int generateStmt(TreeNode *no){
                   printf("(MOVE,$t%d,$a%d,-)\n", param, cont);
                   fprintf(arquivoIntermediario, "(MOVE,$t%d,$a%d,-)\n", param,cont);
                   
-                  if (isRecursive){
+                  if (isRecursive && strcmp(no->attr.name, funcaoAtual) == 0){
                      printf("(STORE,$t%d,0,$sp)\n", param);
                      printf("(LI,$sp,1,$sp)\n");
                      fprintf(arquivoIntermediario, "(STORE,$t%d,0,$sp)\n", param);
@@ -233,7 +240,7 @@ static int generateStmt(TreeNode *no){
                printf("(JUMP_FUNC,%s,-,-)\n", name);
                fprintf(arquivoIntermediario, "(JUMP_FUNC,%s,-,-)\n", name);
 
-               if (isRecursive) {
+               if (isRecursive && strcmp(no->attr.name, funcaoAtual) == 0){
                   auxTree = no->child[0];
                   for (int i = cont - 1; i >= 0; i--) {
                      printf("(POP,$sp,%s,-)\n", auxTree->attr.name);
@@ -452,4 +459,8 @@ void geraIntermediario(TreeNode *no){
    analyzeNode(no);
    
    fprintf(arquivoIntermediario, "(HALT,-,-,-)\n");
+
+   for(int i = 0; i <= recursivas->posicao; i++){
+      printf("Funções recursivas: %s\n", recursivas[i].name);
+   }
 }

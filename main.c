@@ -25,6 +25,8 @@ int TraceCode = FALSE;
 
 int Error = FALSE;
 
+RECURSIVE *recursivas = NULL;
+
 int yywrap()
 {
   return 1;
@@ -34,6 +36,7 @@ int main(int argc, char *argv[])
 {
   TreeNode *arvoreSintatica;
   char nomeArquivo[120];
+  recursivas = (RECURSIVE *)malloc(sizeof(RECURSIVE));
 
   if (argc != 2){
     printf("Quantidade de entradas incorreta.\n");
@@ -152,7 +155,7 @@ int main(int argc, char *argv[])
 
     printf("\nFIM\n");
   }
-
+  free(recursivas);
   fclose(source);
 
   return 0;

@@ -43,18 +43,12 @@ input $8
 sw $8,3($0)
 lw $8,2($0)
 move $8,$2
-sw $8,0($31)
-addi $31,1,$31
 lw $9,3($0)
 move $9,$3
-sw $9,0($31)
-addi $31,1,$31
-addi $10,55,$zero
+addi $10,51,$zero
 sw $10,0($29)
 addi $29,1,$29
 jfunc 4
-POP 
-POP 
 move $30,$10
 output $10
 halt 
