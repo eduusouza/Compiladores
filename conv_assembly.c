@@ -161,32 +161,32 @@ int buscaValorEnderecoRegistrador(char *regAux){ // retorna o número do registr
     } else if (strcmp(regAux, "$t11") == 0){
         return $t11;
 
-    } else if (strcmp(regAux, "$s0") == 0){
-        return $s0;
+    } else if (strcmp(regAux, "$t12") == 0){
+        return $t12;
 
-    } else if (strcmp(regAux, "$s1") == 0){
-        return $s1;
+    } else if (strcmp(regAux, "$t13") == 0){
+        return $t13;
 
-    } else if (strcmp(regAux, "$s2") == 0){
-        return $s2;
+    } else if (strcmp(regAux, "$t14") == 0){
+        return $t14;
 
-    } else if (strcmp(regAux, "$s3") == 0){
-        return $s3;
+    } else if (strcmp(regAux, "$t15") == 0){
+        return $t15;
 
-    } else if (strcmp(regAux, "$s4") == 0){
-        return $s4;
+    } else if (strcmp(regAux, "$t16") == 0){
+        return $t16;
 
-    } else if (strcmp(regAux, "$s5") == 0){
-        return $s5;
+    } else if (strcmp(regAux, "$t17") == 0){
+        return $t17;
 
-    } else if (strcmp(regAux, "$s6") == 0){
-        return $s6;
+    } else if (strcmp(regAux, "$t18") == 0){
+        return $t18;
 
-    } else if (strcmp(regAux, "$s7") == 0){
-        return $s7;
+    } else if (strcmp(regAux, "$t19") == 0){
+        return $t19;
 
-    } else if (strcmp(regAux, "$s8") == 0){
-        return $s8;
+    } else if (strcmp(regAux, "$fp") == 0){
+        return $fp;
 
     } else if (strcmp(regAux, "$ra") == 0){
         return $ra;
@@ -397,7 +397,7 @@ void call(char *linha, int indice){
 
     indice = parametro(linha, indice);
     
-    sprintf(aux, "%d,", linhaAtual + 3);
+    sprintf(aux, "%d,", linhaAtual + 2);
     strcpy(instrucao[linhaAtual].reg2, aux);
 
     ultimo_parametro(linha, indice);

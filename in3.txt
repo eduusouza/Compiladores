@@ -1,10 +1,16 @@
+int vet[ 10 ];
+
 void main(void)
 {
-   int x; int y;
-   x = input(); 
-   y = input();
-   if (x>y)
-       output(x);
-   else
-        output(y);
+   int i;
+	i = 0;
+	while (i < 10){
+		vet[i] = input();
+		i = i + 1;
+	}
+    i = 0;
+	while (i < 10){
+		i = i + 1;
+		output(vet[i]);
+	}
 }

@@ -40,8 +40,8 @@ static int generateStmt(TreeNode *no){
 
          op = analyzeNode(no->child[0]); // checa condição oposta
 
-         printf("(BNE,$t%d,$zero,L%d)\n", op, finishWhile); // fim do while
-         fprintf(arquivoIntermediario, "(BNE,$t%d,$zero,L%d)\n", op, finishWhile);    // fim do while
+         printf("(BEQ,$t%d,$zero,L%d)\n", op, finishWhile); // fim do while
+         fprintf(arquivoIntermediario, "(BEQ,$t%d,$zero,L%d)\n", op, finishWhile);    // fim do while
 
          ret = analyzeNode(no->child[1]); // executa a parte de dentro do while
 
@@ -83,8 +83,8 @@ static int generateStmt(TreeNode *no){
          ret = analyzeNode(no->child[0]);
 
          // condição análoga = TRUE, GOTO Else
-         printf("(BNE,$t%d,$zero,L%d)\n", ret, label);
-         fprintf(arquivoIntermediario, "(BNE,$t%d,$zero,L%d)\n", ret, label);
+         printf("(BEQ,$t%d,$zero,L%d)\n", ret, label);
+         fprintf(arquivoIntermediario, "(BEQ,$t%d,$zero,L%d)\n", ret, label);
 
          // entra no bloco if
          analyzeNode(no->child[1]);
@@ -151,12 +151,8 @@ static int generateStmt(TreeNode *no){
             temporario++;
             printf("(LOAD,$t%d,0,$ra)\n", temporario);
             fprintf(arquivoIntermediario, "(LOAD,$t%d,0,$ra)\n", temporario);
-            printf("(LOAD,$t%d,0,$t%d\n)", temporario + 1, temporario);
-            fprintf(arquivoIntermediario, "(LOAD,$t%d,0,$t%d)\n", temporario + 1, temporario);
-            printf("(SUBI,$ra,1,$ra)\n");
-            fprintf(arquivoIntermediario, "(SUBI,$ra,1,$ra)\n");
-            printf("(JUMP_REG,$t%d,-,-)\n", temporario + 1);
-            fprintf(arquivoIntermediario, "(JUMP_REG,$t%d,-,-)\n", temporario + 1);
+            printf("(JUMP_REG,$t%d,-,-)\n", temporario);
+            fprintf(arquivoIntermediario, "(JUMP_REG,$t%d,-,-)\n", temporario);
          }
          
          break;
@@ -233,16 +229,14 @@ static int generateStmt(TreeNode *no){
                fprintf(arquivoIntermediario, "(CALL,$t%d,%s,%d)\n", temporario, name, cont);
                printf("(STORE,$t%d,0,$ra)\n", temporario);
                fprintf(arquivoIntermediario, "(STORE,$t%d,0,$ra)\n", temporario);
-               printf("(LI,$ra,1,$ra)\n");
-               fprintf(arquivoIntermediario, "(LI,$ra,1,$ra)\n");
                printf("(JUMP_FUNC,%s,-,-)\n", name);
                fprintf(arquivoIntermediario, "(JUMP_FUNC,%s,-,-)\n", name);
 
                if (isRecursive && strcmp(no->attr.name, funcaoAtual) == 0){
                   auxTree = no->child[0];
                   for (int i = cont - 1; i >= 0; i--) {
-                     printf("(POP,$sp,%s,-)\n", auxTree->attr.name);
-                     fprintf(arquivoIntermediario, "(POP,$sp,%s,-)\n", auxTree->attr.name);
+                     //printf("(POP,$sp,%s,-)\n", auxTree->attr.name);
+                     //fprintf(arquivoIntermediario, "(POP,$sp,%s,-)\n", auxTree->attr.name);
                      if (auxTree->sibling != NULL) {
                         auxTree = auxTree->sibling;
                      }
@@ -317,23 +311,23 @@ static int generateExp(TreeNode *no){
             break;
 
          case MENOR:
-            printf("(MAIORIG,$t%d,$t%d,$t%d)\n", param1, param2, temporario);
-            fprintf(arquivoIntermediario, "(MAIORIG,$t%d,$t%d,$t%d)\n", param1, param2, temporario);
+            printf("(MENOR,$t%d,$t%d,$t%d)\n", param1, param2, temporario);
+            fprintf(arquivoIntermediario, "(MENOR,$t%d,$t%d,$t%d)\n", param1, param2, temporario);
             break;
 
          case MAIOR:
-            printf("(MENORIG,$t%d,$t%d,$t%d)\n", param1, param2, temporario);
-            fprintf(arquivoIntermediario, "(MENORIG,$t%d,$t%d,$t%d)\n", param1, param2, temporario);
-            break;
-
-         case MENORIG:
             printf("(MAIOR,$t%d,$t%d,$t%d)\n", param1, param2, temporario);
             fprintf(arquivoIntermediario, "(MAIOR,$t%d,$t%d,$t%d)\n", param1, param2, temporario);
             break;
 
+         case MENORIG:
+            printf("(MENORIG,$t%d,$t%d,$t%d)\n", param1, param2, temporario);
+            fprintf(arquivoIntermediario, "(MENORIG,$t%d,$t%d,$t%d)\n", param1, param2, temporario);
+            break;
+
          case MAIORIG:
-            printf("(MENOR,$t%d,$t%d,$t%d)\n", param1, param2, temporario);
-            fprintf(arquivoIntermediario, "(MENOR,$t%d,$t%d,$t%d)\n", param1, param2, temporario);
+            printf("(MAIORIG,$t%d,$t%d,$t%d)\n", param1, param2, temporario);
+            fprintf(arquivoIntermediario, "(MAIORIG,$t%d,$t%d,$t%d)\n", param1, param2, temporario);
             break;
 
          default:

@@ -202,7 +202,7 @@ void instrucaoSLT(char *valorLinha, int valorIndice)
     valorIndice = buscaRegistrador(valorLinha, valorIndice);
     valorRS = atoi(registradores);
 
-    fprintf(arquivoBinario, "Memoria[%d] = {6'd4, 5'd%d, 5'd%d, 5'd%d, 16'd0}; // slt\n", linhaAtual, valorR1, valorR2, valorRS);
+    fprintf(arquivoBinario, "Memoria[%d] = {6'd4, 5'd%d, 5'd%d, 5'd%d, 11'd0}; // slt\n", linhaAtual, valorR1, valorR2, valorRS);
 }
 
 void instrucaoJUMP(char *valorLinha, int valorIndice)
