@@ -1,6 +1,6 @@
-addi $29,50,$0
+addi $1,50,$0
 addi $31,100,$0
-jfunc 34
+jfunc 36
 sw $2,0($0)	//gcd
 sw $3,1($0)
 lw $8,1($0)
@@ -9,7 +9,7 @@ set $8,$9,$10
 beq $10,$0,13
 lw $11,0($0)
 add $11,$0,$30
-jump 32
+jump 33
 lw $8,1($0)	//L0
 move $8,$2
 sw $8,0($31)
@@ -24,12 +24,14 @@ sub $9,$14,$15
 move $15,$3
 sw $15,0($31)
 addi $31,1,$31
-addi $16,29,$zero
-sw $16,0($29)
+addi $16,30,$zero
+sw $16,0($1)
+addi $1,1,$1
 jfunc 4
 move $30,$16
 add $16,$0,$30
-lw $9,0($29)
+subi $1,1,$1	//L1
+lw $9,0($1)
 jreg $9
 sw $0,2($0)	//main
 sw $0,3($0)
@@ -41,9 +43,10 @@ lw $8,2($0)
 move $8,$2
 lw $9,3($0)
 move $9,$3
-addi $10,46,$zero
-sw $10,0($29)
+addi $10,49,$zero
+sw $10,0($1)
+addi $1,1,$1
 jfunc 4
 move $30,$10
 output $10
-halt 
+halt 

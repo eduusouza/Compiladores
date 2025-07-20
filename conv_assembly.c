@@ -397,7 +397,7 @@ void call(char *linha, int indice){
 
     indice = parametro(linha, indice);
     
-    sprintf(aux, "%d,", linhaAtual + 2);
+    sprintf(aux, "%d,", linhaAtual + 3);
     strcpy(instrucao[linhaAtual].reg2, aux);
 
     ultimo_parametro(linha, indice);

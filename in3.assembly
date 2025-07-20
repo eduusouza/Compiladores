@@ -1,6 +1,6 @@
-addi $29,50,$0
+addi $1,50,$0
 addi $31,100,$0
-jfunc 43
+jfunc 44
 sw $2,0($0)	//fibonacci
 sw $0,1($0)
 sw $0,2($0)
@@ -38,16 +38,18 @@ sw $10,1($0)
 jump 15
 lw $8,2($0)	//L1
 add $8,$0,$30
-lw $9,0($29)
+subi $1,1,$1
+lw $9,0($1)
 jreg $9
 sw $0,5($0)	//main
 addi $8,9,$0
 sw $8,5($0)
 lw $8,5($0)
 move $8,$2
-addi $9,50,$zero
-sw $9,0($29)
+addi $9,52,$zero
+sw $9,0($1)
+addi $1,1,$1
 jfunc 4
 move $30,$9
 output $9
-halt 
+halt 
