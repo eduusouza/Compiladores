@@ -187,6 +187,7 @@ static int generateStmt(TreeNode *no){
                param = analyzeNodeCall(no->child[0]);
                fprintf(arquivoIntermediario, "(CALL_OUT,$t%d,%s,-)\n", param, no->attr.name); 
             }
+            nextSibling = 1;
          } else {
             if (no->child[0] != NULL){
 
