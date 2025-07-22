@@ -48,7 +48,7 @@
 (JUMP_REG,$t1,-,-)
 (NOP,main,-,-)
 (ALLOC,n,main,-)
-(LI,$t0,9,-)
+(CALL_IN,$t0,-,-)
 (STORE,$t0,n,-)
 (LOAD,$t0,n,-)
 (MOVE,$t0,$a0,-)

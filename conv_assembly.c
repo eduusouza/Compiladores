@@ -20,20 +20,7 @@ void labels(){
     int j;
 
     for (int i = 0; i < linhaAtual; i++){
-        if (strcmp(instrucao[i].instruc, "addi") == 0){
-            if (strcmp(instrucao[i].regD, "PC") == 0){
-                j = i + 1;
-                while (strcmp(instrucao[j].instruc, "jal") != 0){
-                    j++;
-                }
-                printf("j: %d \n", j);
-                char aux2[10];
-
-                sprintf(aux2, "%d", j);
-                strcpy(instrucao[i].regD, aux2);
-            }
-
-        } else if (strcmp(instrucao[i].instruc, "jump") == 0){
+        if (strcmp(instrucao[i].instruc, "jump") == 0){
             if (instrucao[i].reg1[0] == 'L'){
                 j = 1;
 
