@@ -1,0 +1,20 @@
+/* Programa para inverter um numero */
+
+void main(void) {
+    int n;
+    int resto;
+    int invertido;
+    int temp;
+
+    n = input();
+    invertido = 0;
+
+    while (n > 0) {
+        temp = (n / 10) * 10;
+        resto = n - temp;
+        invertido = invertido * 10 + resto;
+        n = n / 10;
+    }
+
+    output(invertido);
+}

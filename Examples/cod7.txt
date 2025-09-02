@@ -1,0 +1,13 @@
+/* Codigo para decremento do numero n até 0 */
+
+void main(void){
+    int i;
+    int num;
+    i = 0;
+    num = input();
+    output(num);
+    while(num >= i){
+        num = num - 1;
+        output(num);
+    }
+}

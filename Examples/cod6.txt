@@ -1,0 +1,13 @@
+/* Codigo para incremento ate o numero n */
+
+void main(void){
+    int i;
+    int num;
+    i = 0;
+    num = input();
+    output(i);
+    while(i <= num){
+        i = i + 1;
+        output(i);
+    }
+}

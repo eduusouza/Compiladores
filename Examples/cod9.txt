@@ -1,0 +1,29 @@
+/* Programa para verificar a primalidade de um numero */
+
+void main(void) {
+    int n;
+    int i;
+    int ehPrimo;
+    int temp;
+
+    n = input();
+    i = 2;
+    ehPrimo = 1;
+
+    if (n <= 1) {
+        ehPrimo = 0;
+    } else {
+        while (i < n) {
+            temp = n;
+            while (temp >= i) {
+                temp = temp - i;
+            }
+            if (temp == 0) {
+                ehPrimo = 0;
+            }
+            i = i + 1;
+        }
+    }
+
+    output(ehPrimo);
+}
