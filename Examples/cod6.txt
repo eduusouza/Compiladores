@@ -7,7 +7,7 @@ void main(void){
     num = input();
     output(i);
     while(i <= num){
-        i = i + 1;
         output(i);
+        i = i + 1;
     }
 }

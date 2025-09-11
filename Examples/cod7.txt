@@ -6,7 +6,7 @@ void main(void){
     i = 0;
     num = input();
     output(num);
-    while(num >= i){
+    while(num > i){
         num = num - 1;
         output(num);
     }

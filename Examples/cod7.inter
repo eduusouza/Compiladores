@@ -13,7 +13,7 @@
 (LABEL,L0,-,-)
 (LOAD,$t2,num,-)
 (LOAD,$t3,i,-)
-(MAIORIG,$t2,$t3,$t4)
+(MAIOR,$t2,$t3,$t4)
 (BEQ,$t4,$zero,L1)
 (LOAD,$t5,num,-)
 (LI,$t6,1,-)

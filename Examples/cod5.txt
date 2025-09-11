@@ -28,7 +28,9 @@ int mmc (int a, int b){
 void main (void){
     int numUM;
     int numDOIS;
+    int resultado;
     numUM = input();
     numDOIS = input ();
-    output(mmc(numUM, numDOIS));
+    resultado = mmc(numUM, numDOIS); 
+    output(resultado);
 }

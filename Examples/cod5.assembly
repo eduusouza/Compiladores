@@ -73,6 +73,7 @@ lw $9,0($1)
 jreg $9
 sw $0,10($0)	//main
 sw $0,11($0)
+sw $0,12($0)
 input $8
 sw $8,10($0)
 input $8
@@ -81,10 +82,12 @@ lw $8,10($0)
 move $8,$2
 lw $9,11($0)
 move $9,$3
-addi $10,87,$zero
+addi $10,88,$zero
 sw $10,0($1)
 addi $1,1,$1
 jfunc 47
 move $30,$10
-output $10
-halt 
+sw $10,12($0)
+lw $8,12($0)
+output $8
+halt 
