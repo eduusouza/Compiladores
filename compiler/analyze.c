@@ -138,7 +138,7 @@ static void insertTreeNode(TreeNode *no){
 					contaQtdArgumentos++;
 				}
 
-				if ((strcmp(CharVerificaOcorrenciaNoMesmoEscopo(no->attr.name, "Global", "tipoDeclaracao"), " ") == 0) && ((strcmp(no->attr.name, "input") != 0 && strcmp(no->attr.name, "output") != 0))){
+				if ((strcmp(CharVerificaOcorrenciaNoMesmoEscopo(no->attr.name, "Global", "tipoDeclaracao"), " ") == 0) && ((strcmp(no->attr.name, "input") != 0 && strcmp(no->attr.name, "output") != 0 && strcmp(no->attr.name, "LCDWrite") != 0))){
 					// Não existe a função na tabela
 					DeclaracaoDeErro(no, "A funcao chamada nao existe ou foi declarada erroneamente");
 					break;
@@ -152,7 +152,7 @@ static void insertTreeNode(TreeNode *no){
 						indiceRecursivas++;
 					}
 				}
-				if(VerificaEquivalenciaParametrosDaFuncao(no->attr.name, contaQtdArgumentos) != 1  && ((strcmp(no->attr.name, "input") != 0 && strcmp(no->attr.name, "output") != 0))){
+				if(VerificaEquivalenciaParametrosDaFuncao(no->attr.name, contaQtdArgumentos) != 1  && ((strcmp(no->attr.name, "input") != 0 && strcmp(no->attr.name, "output") != 0 && strcmp(no->attr.name, "LCDWrite") != 0))){
 					DeclaracaoDeErro(no, "A quantidade de parametros passado para a função é diferente da quantidade de argumentos que ela necessita.");
 				}
 				break;

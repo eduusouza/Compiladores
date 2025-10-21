@@ -190,6 +190,12 @@ static int generateStmt(TreeNode *no){
                fprintf(arquivoIntermediario, "(CALL_OUT,$t%d,%s,-)\n", param, no->attr.name); 
             }
             nextSibling = 1;
+         } else if (strcmp(no->attr.name, "LCDWrite") == 0){
+            if (no->child[0] != NULL){
+               param = analyzeNodeCall(no->child[0]);
+               fprintf(arquivoIntermediario, "(LCDWrite,%d,-,-)\n", no->child[0]->attr.val); 
+            }
+            nextSibling = 1;
          } else {
             if (no->child[0] != NULL){
 

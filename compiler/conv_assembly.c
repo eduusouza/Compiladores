@@ -765,6 +765,17 @@ void move(char *linha, int indice){
     strcpy(instrucao[linhaAtual].reg2, aux);
 }
 
+void LCDWrite(char *linha, int indice){
+
+    strcpy(instrucao[linhaAtual].instruc, "lcdw");
+
+    indice = parametro(linha, indice);
+
+    strcpy(instrucao[linhaAtual].reg1, registrador);
+    strcpy(instrucao[linhaAtual].reg2, "");
+    strcpy(instrucao[linhaAtual].regD, "");
+}
+
 void escreveNoArquivo(){
     for (int i = 1; i < linhaAtual; i++){
         fprintf(arquivoAssembly, "%s %s%s%s", instrucao[i].instruc, instrucao[i].reg1, instrucao[i].reg2, instrucao[i].regD);
@@ -901,6 +912,9 @@ void nome_instrucao(char *read){
 
     } else if (strcmp(instruc, "MOVE") == 0){
         move(read, i);
+
+    } else if (strcmp(instruc, "LCDWrite") == 0){
+        LCDWrite(read, i);
 
     } else {
         strcpy(instrucao[linhaAtual].instruc, instruc);

@@ -381,6 +381,14 @@ void instrucaoJFUNC(char *valorLinha, int valorIndice)
     fprintf(arquivoBinario, "Memoria[%d] = {6'd5, 26'd%d}; //jump func \n", linhaAtual, valorImediato - 1); // começa pulando para a main
 }
 
+void instrucaoLCDW(char *valorLinha, int valorIndice)
+{
+    valorIndice = buscaImediato(valorLinha, valorIndice);
+    valorImediato = atoi(registradores);
+
+    fprintf(arquivoBinario, "Memoria[%d] = {6'd20, 26'd%d}; // LCDWrite\n", linhaAtual, valorImediato);
+}
+
 
 void instrucoesBinarias(char *valorLinha)
 {
@@ -484,6 +492,9 @@ void instrucoesBinarias(char *valorLinha)
     }
     else if (strcmp(instrucao, "jump") == 0){
         instrucaoJUMP(valorLinha, valorIndice);
+    }
+    else if (strcmp(instrucao, "lcdw") == 0){
+        instrucaoLCDW(valorLinha, valorIndice);
     }
 }
 
