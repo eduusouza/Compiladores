@@ -1,14 +1,23 @@
-/* Codigo para decremento do numero n até 0 */
+void execSemP(int PID){
+    output(PID);
+}
 
 void main(void){
-    int i;
-    int num;
-    LCDWrite(1);
-    i = 0;
-    num = input();
-    output(num);
-    while(num > i){
-        num = num - 1;
-        output(num);
+    int opcao;
+    int PID;
+    int qntProcessos;
+
+    while(1 > 0){
+        LCDWrite(1);
+        opcao = input();
+
+        if(opcao == 1){
+            LCDWrite(3);
+            PID = input();
+            execSemP(PID);          
+        } else if(opcao == 2){
+            LCDWrite(2);
+            qntProcessos = input();
+        }
     }
 }

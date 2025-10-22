@@ -1,25 +1,47 @@
 addi $1,50,$0
 addi $31,100,$0
-jfunc 4
-sw $0,0($0)	//main
-sw $0,1($0)
-addi $8,1,$0
+jfunc 10
+sw $2,0($0)	//execSemP
+lw $8,0($0)
+output $8
+subi $1,1,$1
+lw $11,0($1)
+jreg $11
+sw $0,1($0)	//main
+sw $0,2($0)
+sw $0,3($0)
+addi $8,1,$0	//L0
+addi $9,0,$0
+sbt $8,$9,$10
+beq $10,$0,47
+addi $11,1,$0
 lcdw 1
-addi $10,0,$0
-sw $10,0($0)
-input $8
-sw $8,1($0)
+input $13
+sw $13,1($0)
 lw $8,1($0)
-output $8
-lw $10,1($0)	//L0
-lw $11,0($0)
-sbt $10,$11,$12
-beq $12,$0,25
-lw $13,1($0)
-addi $14,1,$0
-sub $13,$14,$15
-sw $15,1($0)
-lw $8,1($0)
-output $8
-jump 14
-halt 	//L1
+addi $9,1,$0
+set $8,$9,$10
+beq $10,$0,37
+addi $11,3,$0
+lcdw 3
+input $13
+sw $13,2($0)
+lw $8,2($0)
+move $8,$2
+addi $9,34,$zero
+sw $9,0($1)
+addi $1,1,$1
+jfunc 4
+move $30,$9
+jump 46
+lw $10,1($0)	//L2
+addi $11,2,$0
+set $10,$11,$12
+beq $12,$0,46
+addi $13,2,$0
+lcdw 2
+input $15
+sw $15,3($0)
+jump 46
+jump 13	//L5
+halt 	//L1
