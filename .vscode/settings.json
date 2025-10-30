@@ -1,7 +1,8 @@
 {
     "files.associations": {
         "stdlib.h": "c",
-        "lex.h": "c"
+        "lex.h": "c",
+        "typeinfo": "c"
     },
     "C_Cpp.errorSquiggles": "enabled"
 }

@@ -36,7 +36,7 @@ extern int lineno;
 extern int isRecursive;
 
 typedef struct{
-    char name[10];
+    char name[20];
     int posicao;
 } RECURSIVE;
 

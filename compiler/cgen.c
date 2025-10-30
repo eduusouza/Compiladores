@@ -21,7 +21,7 @@ static int generateStmt(TreeNode *no){
    int ret, op;
    int base, pos;
    int aux;
-   int cont, param;
+   int cont, param, param1;
    int startWhile, finishWhile;
    char *name;
    TreeNode *irmao;
@@ -190,6 +190,15 @@ static int generateStmt(TreeNode *no){
                fprintf(arquivoIntermediario, "(CALL_OUT,$t%d,%s,-)\n", param, no->attr.name); 
             }
             nextSibling = 1;
+
+         } else if (strcmp(no->attr.name, "LOADInst") == 0){
+            if (no->child[0] != NULL){
+               param = analyzeNodeCall(no->child[0]);
+               param1 = analyzeNodeCall(no->child[0]->sibling);
+               fprintf(arquivoIntermediario, "(LOADInst,$t%d,$t%d,-)\n", param, param1); 
+            }
+            nextSibling = 1;
+
          } else if (strcmp(no->attr.name, "LCDWrite") == 0){
             if (no->child[0] != NULL){
                param = analyzeNodeCall(no->child[0]);
@@ -233,6 +242,11 @@ static int generateStmt(TreeNode *no){
             if (strcmp(no->attr.name, "input") == 0){
                printf("(CALL_IN,$t%d,-,-)\n", temporario);
                fprintf(arquivoIntermediario, "(CALL_IN,$t%d,-,-)\n", temporario);
+            } else if (strcmp(no->attr.name, "execPID") == 0){
+               printf("(SO_SAVE,$zero,-,$so0)\n");
+               fprintf(arquivoIntermediario, "(SO_SAVE,$so0)\n");
+               printf("(JUMP_REG,$so1,-,-)\n");
+               fprintf(arquivoIntermediario, "(JUMP_REG,$so1,-,-)\n");
             } else {
                printf("(CALL,$t%d,%s,%d)\n", temporario, name, cont);
                fprintf(arquivoIntermediario, "(CALL,$t%d,%s,%d)\n", temporario, name, cont);

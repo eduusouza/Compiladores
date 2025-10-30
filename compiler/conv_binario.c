@@ -5,6 +5,7 @@
 static int linhaAtual = 0;
 
 int valorR1 = 0, valorR2 = 0, valorRS = 0, valorImediato = 0;
+int valorInstPos = 0, valorROMPos = 0;
 char registradores[10];
 
 int buscaRegistrador(char *linha, int indice)
@@ -292,7 +293,8 @@ void instrucaoNOP(char *valorLinha, int valorIndice)
 
 void instrucaoHALT(char *valorLinha, int valorIndice)
 {
-    fprintf(arquivoBinario, "Memoria[%d] = {6'd13, 26'd0}; // halt\n", linhaAtual);
+    //fprintf(arquivoBinario, "Memoria[%d] = {6'd13, 26'd0}; // halt\n", linhaAtual);
+    fprintf(arquivoBinario, "Memoria[%d] = {6'd19, 5'd26, 5'd0, 5'd0, 11'd0}; // jr\n", linhaAtual);
 }
 
 void instrucaoSLTE(char *valorLinha, int valorIndice)
@@ -389,6 +391,24 @@ void instrucaoLCDW(char *valorLinha, int valorIndice)
     fprintf(arquivoBinario, "Memoria[%d] = {6'd20, 26'd%d}; // LCDWrite\n", linhaAtual, valorImediato);
 }
 
+void instrucaoLOADInst(char *valorLinha, int valorIndice)
+{
+    valorIndice = buscaRegistrador(valorLinha, valorIndice);
+    valorInstPos = atoi(registradores);
+
+    valorIndice = buscaRegistrador(valorLinha, valorIndice);
+    valorROMPos = atoi(registradores);
+
+    fprintf(arquivoBinario, "Memoria[%d] = {6'd21, 5'd%d, 5'd%d, 16'd0}; // LOADInst\n", linhaAtual, valorInstPos, valorROMPos);
+}
+
+void instrucaoSOSave(char *valorLinha, int valorIndice)
+{
+    valorIndice = buscaRegistrador(valorLinha, valorIndice);
+    valorR1 = atoi(registradores);
+
+    fprintf(arquivoBinario, "Memoria[%d] = {6'd2, 5'd0, 5'd%d, 16'd%d}; // addi\n", linhaAtual, valorR1, linhaAtual + 2);
+}
 
 void instrucoesBinarias(char *valorLinha)
 {
@@ -495,6 +515,12 @@ void instrucoesBinarias(char *valorLinha)
     }
     else if (strcmp(instrucao, "lcdw") == 0){
         instrucaoLCDW(valorLinha, valorIndice);
+    }
+    else if (strcmp(instrucao, "linst") == 0){
+        instrucaoLOADInst(valorLinha, valorIndice);
+    }
+    else if (strcmp(instrucao, "sosave") == 0){
+        instrucaoSOSave(valorLinha, valorIndice);
     }
 }
 

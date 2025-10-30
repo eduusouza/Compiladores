@@ -1,11 +1,42 @@
+int Process[10];
+
+int MemPos;
+
+int initUm;
+int endUm;
+
 void execSemP(int PID){
-    output(PID);
+    int init;
+    int end;
+    int instPos;
+
+    init = 0;
+    end = 0;
+    instPos = MemPos;
+
+    if(PID == 1){
+        init = initUm;
+        end = endUm;
+        LCDWrite(11);
+        while (init <= end){
+            LOADInst(instPos, init);
+            instPos = instPos + 1;
+            init = init + 1;
+        }
+        LCDWrite(21);
+        execPID();
+    }
 }
 
 void main(void){
     int opcao;
     int PID;
     int qntProcessos;
+
+    MemPos = 500;
+
+    initUm = 0;
+    endUm = 100;
 
     while(1 > 0){
         LCDWrite(1);

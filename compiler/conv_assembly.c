@@ -166,11 +166,11 @@ int buscaValorEnderecoRegistrador(char *regAux){ // retorna o número do registr
     } else if (strcmp(regAux, "$t17") == 0){
         return $t17;
 
-    } else if (strcmp(regAux, "$t18") == 0){
-        return $t18;
+    } else if (strcmp(regAux, "$so0") == 0){
+        return $so0;
 
-    } else if (strcmp(regAux, "$t19") == 0){
-        return $t19;
+    } else if (strcmp(regAux, "$so1") == 0){
+        return $so1;
 
     } else if (strcmp(regAux, "$fp") == 0){
         return $fp;
@@ -776,6 +776,31 @@ void LCDWrite(char *linha, int indice){
     strcpy(instrucao[linhaAtual].regD, "");
 }
 
+void LOADInst(char *linha, int indice){
+
+    strcpy(instrucao[linhaAtual].instruc, "linst");
+    indice = parametro(linha, indice);
+
+    char aux[5];
+    sprintf(aux, "$%d,", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].reg1, aux);
+
+    indice = parametro(linha, indice);
+
+    sprintf(aux, "$%d", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].reg2, aux);
+}
+
+void SO_SAVE(char *linha, int indice){
+    char aux[5];
+
+    strcpy(instrucao[linhaAtual].instruc, "sosave");
+
+    ultimo_parametro(linha, indice);
+    sprintf(aux, "$%d", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].regD, aux);
+}
+
 void escreveNoArquivo(){
     for (int i = 1; i < linhaAtual; i++){
         fprintf(arquivoAssembly, "%s %s%s%s", instrucao[i].instruc, instrucao[i].reg1, instrucao[i].reg2, instrucao[i].regD);
@@ -915,6 +940,12 @@ void nome_instrucao(char *read){
 
     } else if (strcmp(instruc, "LCDWrite") == 0){
         LCDWrite(read, i);
+
+    } else if (strcmp(instruc, "LOADInst") == 0){
+        LOADInst(read, i);
+
+    } else if (strcmp(instruc, "SO_SAVE") == 0){
+        SO_SAVE(read, i);
 
     } else {
         strcpy(instrucao[linhaAtual].instruc, instruc);
