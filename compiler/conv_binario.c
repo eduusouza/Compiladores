@@ -407,7 +407,7 @@ void instrucaoSOSave(char *valorLinha, int valorIndice)
     valorIndice = buscaRegistrador(valorLinha, valorIndice);
     valorR1 = atoi(registradores);
 
-    fprintf(arquivoBinario, "Memoria[%d] = {6'd2, 5'd0, 5'd%d, 16'd%d}; // addi\n", linhaAtual, valorR1, linhaAtual + 2);
+    fprintf(arquivoBinario, "Memoria[%d] = {6'd2, 5'd0, 5'd%d, 16'd%d}; // addi\n", linhaAtual, valorR1, linhaAtual + 3);
 }
 
 void instrucoesBinarias(char *valorLinha)

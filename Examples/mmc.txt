@@ -8,7 +8,7 @@ int resto (int a, int b){
 
 int mdc (int a, int b){
     int r;
-    while (b != 0){
+    while (b > 0){
         r = resto(a , b);
         a = b;
         b = r;

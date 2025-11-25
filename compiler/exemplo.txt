@@ -1,29 +1,134 @@
 int Process[10];
 
 int MemPos;
+int SO;
 
 int initUm;
 int endUm;
 
+int initDois;
+int endDois;
+
+int initTres;
+int endTres;
+
+int initQuatro;
+int endQuatro;
+
+int initCinco;
+int endCinco;
+
+int initSeis;
+int endSeis;
+
+int initSete;
+int endSete;
+
+int initOito;
+int endOito;
+
+int initNove;
+int endNove;
+
+int initDez;
+int endDez;
+
+void loadPID(int init, int end){
+    int instPos;
+
+    instPos = MemPos;
+    while (init <= end){
+        LOADInst(instPos, init);
+        instPos = instPos + 1;
+        init = init + 1;
+    }
+}
+
 void execSemP(int PID){
     int init;
     int end;
-    int instPos;
 
     init = 0;
     end = 0;
-    instPos = MemPos;
 
     if(PID == 1){
         init = initUm;
         end = endUm;
         LCDWrite(11);
-        while (init <= end){
-            LOADInst(instPos, init);
-            instPos = instPos + 1;
-            init = init + 1;
-        }
+        loadPID(init, end);
         LCDWrite(21);
+        execPID();
+    }
+    if(PID == 2){
+        init = initDois;
+        end = endDois;
+        LCDWrite(12);
+        loadPID(init, end);
+        LCDWrite(22);
+        execPID();
+    }
+    if(PID == 3){
+        init = initTres;
+        end = endTres;
+        LCDWrite(13);
+        loadPID(init, end);
+        LCDWrite(23);
+        execPID();
+    }
+    if(PID == 4){
+        init = initQuatro;
+        end = endQuatro;
+        LCDWrite(14);
+        loadPID(init, end);
+        LCDWrite(24);
+        execPID();
+    }
+    if(PID == 5){
+        init = initCinco;
+        end = endCinco;
+        LCDWrite(15);
+        loadPID(init, end);
+        LCDWrite(25);
+        execPID();
+    }
+    if(PID == 6){
+        init = initSeis;
+        end = endSeis;
+        LCDWrite(16);
+        loadPID(init, end);
+        LCDWrite(26);
+        execPID();
+    }
+    if(PID == 7){
+        init = initSete;
+        end = endSete;
+        LCDWrite(17);
+        loadPID(init, end);
+        LCDWrite(27);
+        execPID();
+    }
+    if(PID == 8){
+        init = initOito;
+        end = endOito;
+        LCDWrite(18);
+        loadPID(init, end);
+        LCDWrite(28);
+        execPID();
+    }
+    if(PID == 9){
+        init = initNove;
+        end = endNove;
+        LCDWrite(19);
+        loadPID(init, end);
+        LCDWrite(29);
+        execPID();
+    }
+    if(PID == 10){
+        init = initDez;
+        end = endDez;
+        LCDWrite(20);
+        loadPID(init, end);
+        LCDWrite(30);
         execPID();
     }
 }
@@ -33,10 +138,38 @@ void main(void){
     int PID;
     int qntProcessos;
 
-    MemPos = 500;
+    MemPos = 800;
+    SO = 0;
 
     initUm = 0;
-    endUm = 100;
+    endUm = 21;
+
+    initDois = 30;
+    endDois = 51;
+
+    initTres = 60;
+    endTres = 101;
+
+    initQuatro = 110;
+    endQuatro = 156;
+
+    initCinco = 160;
+    endCinco = 195;
+
+    initSeis = 200;
+    endSeis = 286;
+
+    initSete = 300;
+    endSete = 357;
+
+    initOito = 360;
+    endOito = 400;
+
+    initNove = 410;
+    endNove = 461;
+
+    initDez = 470;
+    endDez = 605;
 
     while(1 > 0){
         LCDWrite(1);

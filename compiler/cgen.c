@@ -107,20 +107,21 @@ static int generateStmt(TreeNode *no){
 
       // declaração de uma variavel, com seu nome e escopo
       case Variavel_StmtK:
-         printf("(ALLOC,%s,%s,-)\n", no->attr.name, no->attr.escopo);
-         fprintf(arquivoIntermediario, "(ALLOC,%s,%s,-)\n", no->attr.name, no->attr.escopo);
+         //printf("(ALLOC,%s,%s,-)\n", no->attr.name, no->attr.escopo);
+         //fprintf(arquivoIntermediario, "(ALLOC,%s,%s,-)\n", no->attr.name, no->attr.escopo);
          // temporario++;
          break;
 
       // declaração de um vetor, com seu nome, escopo e tamanho
       case Vetor_StmtK:
-         printf("(ALLOC_V,%s,%s,%d)\n", no->attr.name, no->attr.escopo, no->attr.len);
-         fprintf(arquivoIntermediario, "(ALLOC_V,%s,%s,%d)\n", no->attr.name, no->attr.escopo, no->attr.len);
+         //printf("(ALLOC_V,%s,%s,%d)\n", no->attr.name, no->attr.escopo, no->attr.len);
+         //fprintf(arquivoIntermediario, "(ALLOC_V,%s,%s,%d)\n", no->attr.name, no->attr.escopo, no->attr.len);
          return -1;
          break;
 
       case Funcao_StmtK:
          temporario = 0;
+         nparams = 0;
 
          strcpy(funcaoAtual, no->attr.name);
          
@@ -245,6 +246,8 @@ static int generateStmt(TreeNode *no){
             } else if (strcmp(no->attr.name, "execPID") == 0){
                printf("(SO_SAVE,$zero,-,$so0)\n");
                fprintf(arquivoIntermediario, "(SO_SAVE,$so0)\n");
+               printf("(LI,$so1,800,-)\n");
+               fprintf(arquivoIntermediario, "(LI,$so1,800,-)\n");
                printf("(JUMP_REG,$so1,-,-)\n");
                fprintf(arquivoIntermediario, "(JUMP_REG,$so1,-,-)\n");
             } else {
@@ -469,8 +472,8 @@ int analyzeNodeCall(TreeNode *no){
 
 void geraIntermediario(TreeNode *no){
 
-   fprintf(arquivoIntermediario, "(LI,$r0,50,-)\n");
-   fprintf(arquivoIntermediario, "(LI,$sp,100,-)\n");
+   fprintf(arquivoIntermediario, "(LI,$r0,150,-)\n");
+   fprintf(arquivoIntermediario, "(LI,$sp,200,-)\n");
    fprintf(arquivoIntermediario, "(JUMP_FUNC,main,-,-)\n");
    
    analyzeNode(no);
