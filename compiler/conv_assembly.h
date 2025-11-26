@@ -3,9 +3,9 @@
 
 typedef struct{
     char instruc[6];
-    char reg1[5];
-    char reg2[5];
-    char regD[5];
+    char reg1[10];
+    char reg2[10];
+    char regD[10];
     char label[11];
     char func[20];
 } ASSEMBLY;

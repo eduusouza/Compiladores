@@ -801,6 +801,50 @@ void SO_SAVE(char *linha, int indice){
     strcpy(instrucao[linhaAtual].regD, aux);
 }
 
+void storeReg(char *linha, int indice){
+
+    strcpy(instrucao[linhaAtual].instruc, "sw");
+
+    indice = parametro(linha, indice);
+
+    char aux[10];
+    sprintf(aux, "$%d,", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].reg1, aux);
+
+    indice = parametro(linha, indice);
+    sprintf(aux, "%s", registrador);
+    strcpy(instrucao[linhaAtual].reg2, aux);
+
+    ultimo_parametro(linha, indice);
+
+    sprintf(aux, "($%d)", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].regD, aux);
+}
+
+void loadReg(char *linha, int indice){
+
+    strcpy(instrucao[linhaAtual].instruc, "lw");
+
+    indice = parametro(linha, indice);
+
+    char aux[10];
+    sprintf(aux, "$%d,", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].reg1, aux);
+
+    indice = parametro(linha, indice);
+    sprintf(aux, "%s", registrador);
+    strcpy(instrucao[linhaAtual].reg2, aux);
+
+    ultimo_parametro(linha, indice);
+
+    sprintf(aux, "($%d)", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].regD, aux);
+}
+
+void resetReg(char *linha, int indice){
+    strcpy(instrucao[linhaAtual].instruc, "resetReg");
+}
+
 void escreveNoArquivo(){
     for (int i = 1; i < linhaAtual; i++){
         fprintf(arquivoAssembly, "%s %s%s%s", instrucao[i].instruc, instrucao[i].reg1, instrucao[i].reg2, instrucao[i].regD);
@@ -946,6 +990,15 @@ void nome_instrucao(char *read){
 
     } else if (strcmp(instruc, "SO_SAVE") == 0){
         SO_SAVE(read, i);
+
+    } else if (strcmp(instruc, "STOREREG") == 0){
+        storeReg(read, i);
+
+    } else if (strcmp(instruc, "LOADREG") == 0){
+        loadReg(read, i);
+
+    } else if (strcmp(instruc, "RESETREG") == 0){
+        resetReg(read, i);
 
     } else {
         strcpy(instrucao[linhaAtual].instruc, instruc);

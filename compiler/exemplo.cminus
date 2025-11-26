@@ -1,7 +1,6 @@
 int Process[10];
 
 int MemPos;
-int SO;
 
 int initUm;
 int endUm;
@@ -57,7 +56,11 @@ void execSemP(int PID){
         LCDWrite(11);
         loadPID(init, end);
         LCDWrite(21);
+        saveContext(0);
+        changeContext(1);
         execPID();
+        saveContext(1);
+        changeContext(0);
     }
     if(PID == 2){
         init = initDois;
@@ -65,7 +68,11 @@ void execSemP(int PID){
         LCDWrite(12);
         loadPID(init, end);
         LCDWrite(22);
+        saveContext(0);
+        changeContext(2);
         execPID();
+        saveContext(2);
+        changeContext(0);
     }
     if(PID == 3){
         init = initTres;
@@ -73,7 +80,11 @@ void execSemP(int PID){
         LCDWrite(13);
         loadPID(init, end);
         LCDWrite(23);
+        saveContext(0);
+        changeContext(3);
         execPID();
+        saveContext(3);
+        changeContext(0);
     }
     if(PID == 4){
         init = initQuatro;
@@ -81,7 +92,11 @@ void execSemP(int PID){
         LCDWrite(14);
         loadPID(init, end);
         LCDWrite(24);
+        saveContext(0);
+        changeContext(4);
         execPID();
+        saveContext(4);
+        changeContext(0);
     }
     if(PID == 5){
         init = initCinco;
@@ -89,7 +104,11 @@ void execSemP(int PID){
         LCDWrite(15);
         loadPID(init, end);
         LCDWrite(25);
+        saveContext(0);
+        changeContext(5);
         execPID();
+        saveContext(5);
+        changeContext(0);
     }
     if(PID == 6){
         init = initSeis;
@@ -97,7 +116,11 @@ void execSemP(int PID){
         LCDWrite(16);
         loadPID(init, end);
         LCDWrite(26);
+        saveContext(0);
+        changeContext(6);
         execPID();
+        saveContext(6);
+        changeContext(0);
     }
     if(PID == 7){
         init = initSete;
@@ -105,7 +128,11 @@ void execSemP(int PID){
         LCDWrite(17);
         loadPID(init, end);
         LCDWrite(27);
+        saveContext(0);
+        changeContext(7);
         execPID();
+        saveContext(7);
+        changeContext(0);
     }
     if(PID == 8){
         init = initOito;
@@ -113,7 +140,11 @@ void execSemP(int PID){
         LCDWrite(18);
         loadPID(init, end);
         LCDWrite(28);
+        saveContext(0);
+        changeContext(8);
         execPID();
+        saveContext(8);
+        changeContext(0);
     }
     if(PID == 9){
         init = initNove;
@@ -121,7 +152,11 @@ void execSemP(int PID){
         LCDWrite(19);
         loadPID(init, end);
         LCDWrite(29);
+        saveContext(0);
+        changeContext(9);
         execPID();
+        saveContext(9);
+        changeContext(0);
     }
     if(PID == 10){
         init = initDez;
@@ -129,7 +164,11 @@ void execSemP(int PID){
         LCDWrite(20);
         loadPID(init, end);
         LCDWrite(30);
+        saveContext(0);
+        changeContext(10);
         execPID();
+        saveContext(10);
+        changeContext(0);
     }
 }
 
@@ -138,38 +177,37 @@ void main(void){
     int PID;
     int qntProcessos;
 
-    MemPos = 800;
-    SO = 0;
+    MemPos = 3000;
 
     initUm = 0;
-    endUm = 21;
+    endUm = 24;
 
     initDois = 30;
-    endDois = 51;
+    endDois = 54;
 
     initTres = 60;
-    endTres = 101;
+    endTres = 105;
 
     initQuatro = 110;
-    endQuatro = 156;
+    endQuatro = 161;
 
-    initCinco = 160;
-    endCinco = 195;
+    initCinco = 170;
+    endCinco = 210;
 
-    initSeis = 200;
-    endSeis = 286;
+    initSeis = 220;
+    endSeis = 314;
 
-    initSete = 300;
-    endSete = 357;
+    initSete = 320;
+    endSete = 382;
 
-    initOito = 360;
-    endOito = 400;
+    initOito = 390;
+    endOito = 434;
 
-    initNove = 410;
-    endNove = 461;
+    initNove = 440;
+    endNove = 497;
 
-    initDez = 470;
-    endDez = 605;
+    initDez = 500;
+    endDez = 644;
 
     while(1 > 0){
         LCDWrite(1);

@@ -142,6 +142,8 @@ static void insertTreeNode(TreeNode *no){
 				((strcmp(no->attr.name, "input") != 0 && 
 				strcmp(no->attr.name, "output") != 0 && 
 				strcmp(no->attr.name, "LOADInst") != 0 &&
+				strcmp(no->attr.name, "saveContext") != 0 &&
+				strcmp(no->attr.name, "changeContext") != 0 &&
 				strcmp(no->attr.name, "execPID") != 0 &&
 				strcmp(no->attr.name, "LCDWrite") != 0))){
 					// Não existe a função na tabela
@@ -161,6 +163,8 @@ static void insertTreeNode(TreeNode *no){
 				((strcmp(no->attr.name, "input") != 0 && 
 				strcmp(no->attr.name, "output") != 0 && 
 				strcmp(no->attr.name, "LOADInst") != 0 &&
+				strcmp(no->attr.name, "saveContext") != 0 &&
+				strcmp(no->attr.name, "changeContext") != 0 &&
 				strcmp(no->attr.name, "execPID") != 0 &&
 				strcmp(no->attr.name, "LCDWrite") != 0))){
 					DeclaracaoDeErro(no, "A quantidade de parametros passado para a função é diferente da quantidade de argumentos que ela necessita.");

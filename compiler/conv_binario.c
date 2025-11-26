@@ -2,7 +2,7 @@
 #include <string.h>
 #include "conv_binario.h"
 
-static int linhaAtual = 0;
+int linhaAtual = 0;
 
 int valorR1 = 0, valorR2 = 0, valorRS = 0, valorImediato = 0;
 int valorInstPos = 0, valorROMPos = 0;
@@ -410,6 +410,11 @@ void instrucaoSOSave(char *valorLinha, int valorIndice)
     fprintf(arquivoBinario, "Memoria[%d] = {6'd2, 5'd0, 5'd%d, 16'd%d}; // addi\n", linhaAtual, valorR1, linhaAtual + 3);
 }
 
+void instrucaoRESETREG(char *valorLinha, int valorIndice)
+{
+    fprintf(arquivoBinario, "Memoria[%d] = {6'd22, 26'd0}; // resetReg\n", linhaAtual);
+}
+
 void instrucoesBinarias(char *valorLinha)
 {
     char instrucao[15];
@@ -521,6 +526,9 @@ void instrucoesBinarias(char *valorLinha)
     }
     else if (strcmp(instrucao, "sosave") == 0){
         instrucaoSOSave(valorLinha, valorIndice);
+    }
+    else if (strcmp(instrucao, "resetReg") == 0){
+        instrucaoRESETREG(valorLinha, valorIndice);
     }
 }
 

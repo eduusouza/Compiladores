@@ -141,6 +141,7 @@ int procuraPelaString(char *name){
 
 void st_insert(char *name, int lineno, int loc, int tipo, int tipoExp, char *escopo, char *param, char *vetor, int qtdParametros){
     int h = hash(name);
+    int PID = 0;
     BucketList l = hashTable[h];
 
     while ((l != NULL)){
@@ -163,7 +164,11 @@ void st_insert(char *name, int lineno, int loc, int tipo, int tipoExp, char *esc
         l->name = name;
         l->lines = (LineList)malloc(sizeof(struct LineListRec));
         l->lines->lineno = lineno;
-        l->memloc = loc;
+        if (PID == 0){
+            l->memloc = loc;
+        } else {
+            l->memloc = loc + (100 + PID * 200);
+        } 
         l->escopo = escopo;
         l->param = param;
         l->vetor = vetor;
