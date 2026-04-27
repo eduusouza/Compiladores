@@ -10,6 +10,8 @@ static int labelEscopoActual = 0;
 static int nparams = 0;
 static char funcaoAtual[40];
 
+int PID = 0;
+
 int analyzeNode(TreeNode *no);
 int analyzeNodeCall(TreeNode *no);
 
@@ -22,7 +24,9 @@ static int generateStmt(TreeNode *no){
    int base, pos;
    int aux;
    int cont, param, param1;
+   int offset;
    int startWhile, finishWhile;
+   int startIf, finishIf;
    char *name;
    TreeNode *irmao;
    TreeNode *auxTree;
@@ -82,40 +86,44 @@ static int generateStmt(TreeNode *no){
          // salva em ret o resultado da condição referente ao teste do IF
          ret = analyzeNode(no->child[0]);
 
+         startIf = label;
+         label++;
+         finishIf = label;
+         label++;
+
          // condição análoga = TRUE, GOTO Else
-         printf("(BEQ,$t%d,$zero,L%d)\n", ret, label);
-         fprintf(arquivoIntermediario, "(BEQ,$t%d,$zero,L%d)\n", ret, label);
+         printf("(BEQ,$t%d,$zero,L%d)\n", ret, startIf);
+         fprintf(arquivoIntermediario, "(BEQ,$t%d,$zero,L%d)\n", ret, startIf);
 
          // entra no bloco if
          analyzeNode(no->child[1]);
          // Define fim da função (return ou não)
-         printf("(JUMP,L%d,-,-)\n", label + 1);
-         fprintf(arquivoIntermediario, "(JUMP,L%d,-,-)\n", label + 1);
+         printf("(JUMP,L%d,-,-)\n", finishIf);
+         fprintf(arquivoIntermediario, "(JUMP,L%d,-,-)\n", finishIf);
 
          // marca o começo do else
-         printf("(LABEL,L%d,-,-)\n", label); // bloco else
-         fprintf(arquivoIntermediario, "(LABEL,L%d,-,-)\n", label);    // bloco else
-         label++;
+         printf("(LABEL,L%d,-,-)\n", startIf); // bloco else
+         fprintf(arquivoIntermediario, "(LABEL,L%d,-,-)\n", startIf);    // bloco else
 
          analyzeNode(no->child[2]);
 
          // Define o fim do bloco if-else
-         printf("(LABEL,L%d,-,-)\n", label);
-         fprintf(arquivoIntermediario, "(LABEL,L%d,-,-)\n", label);
+         printf("(LABEL,L%d,-,-)\n", finishIf);
+         fprintf(arquivoIntermediario, "(LABEL,L%d,-,-)\n", finishIf);
          label++;
          break;
 
       // declaração de uma variavel, com seu nome e escopo
       case Variavel_StmtK:
-         //printf("(ALLOC,%s,%s,-)\n", no->attr.name, no->attr.escopo);
-         //fprintf(arquivoIntermediario, "(ALLOC,%s,%s,-)\n", no->attr.name, no->attr.escopo);
+         printf("(ALLOC,%s,%s,-)\n", no->attr.name, no->attr.escopo);
+         fprintf(arquivoIntermediario, "(ALLOC,%s,%s,-)\n", no->attr.name, no->attr.escopo);
          // temporario++;
          break;
 
       // declaração de um vetor, com seu nome, escopo e tamanho
       case Vetor_StmtK:
-         //printf("(ALLOC_V,%s,%s,%d)\n", no->attr.name, no->attr.escopo, no->attr.len);
-         //fprintf(arquivoIntermediario, "(ALLOC_V,%s,%s,%d)\n", no->attr.name, no->attr.escopo, no->attr.len);
+         printf("(ALLOC_V,%s,%s,%d)\n", no->attr.name, no->attr.escopo, no->attr.len);
+         fprintf(arquivoIntermediario, "(ALLOC_V,%s,%s,%d)\n", no->attr.name, no->attr.escopo, no->attr.len);
          return -1;
          break;
 
@@ -206,6 +214,94 @@ static int generateStmt(TreeNode *no){
                fprintf(arquivoIntermediario, "(LCDWrite,%d,-,-)\n", no->child[0]->attr.val); 
             }
             nextSibling = 1;
+            temporario--;
+
+         } else if (strcmp(no->attr.name, "saveContext") == 0){
+            if (no->child[0] != NULL){
+               param = analyzeNodeCall(no->child[0]);
+               if(no->child[0]->attr.val == 0){
+                  offset = 250;
+               } else {
+                  offset = 250 + (no->child[0]->attr.val * 200);
+               }
+               fprintf(arquivoIntermediario, "(STOREREG,$zero,%d,-)\n", offset);
+               fprintf(arquivoIntermediario, "(STOREREG,$r0,%d,-)\n", offset + 1);
+               fprintf(arquivoIntermediario, "(STOREREG,$a0,%d,-)\n", offset + 2);
+               fprintf(arquivoIntermediario, "(STOREREG,$a1,%d,-)\n", offset + 3);
+               fprintf(arquivoIntermediario, "(STOREREG,$a2,%d,-)\n", offset + 4);
+               fprintf(arquivoIntermediario, "(STOREREG,$a3,%d,-)\n", offset + 5);
+               fprintf(arquivoIntermediario, "(STOREREG,$a4,%d,-)\n", offset + 6);
+               fprintf(arquivoIntermediario, "(STOREREG,$a5,%d,-)\n", offset + 7);
+               fprintf(arquivoIntermediario, "(STOREREG,$t0,%d,-)\n", offset + 8);
+               fprintf(arquivoIntermediario, "(STOREREG,$t1,%d,-)\n", offset + 9);
+               fprintf(arquivoIntermediario, "(STOREREG,$t2,%d,-)\n", offset + 10);
+               fprintf(arquivoIntermediario, "(STOREREG,$t3,%d,-)\n", offset + 11);
+               fprintf(arquivoIntermediario, "(STOREREG,$t4,%d,-)\n", offset + 12);
+               fprintf(arquivoIntermediario, "(STOREREG,$t5,%d,-)\n", offset + 13);
+               fprintf(arquivoIntermediario, "(STOREREG,$t6,%d,-)\n", offset + 14);
+               fprintf(arquivoIntermediario, "(STOREREG,$t7,%d,-)\n", offset + 15);
+               fprintf(arquivoIntermediario, "(STOREREG,$t8,%d,-)\n", offset + 16);
+               fprintf(arquivoIntermediario, "(STOREREG,$t9,%d,-)\n", offset + 17);
+               fprintf(arquivoIntermediario, "(STOREREG,$t10,%d,-)\n", offset + 18);
+               fprintf(arquivoIntermediario, "(STOREREG,$t11,%d,-)\n", offset + 19);
+               fprintf(arquivoIntermediario, "(STOREREG,$t12,%d,-)\n", offset + 20);
+               fprintf(arquivoIntermediario, "(STOREREG,$t13,%d,-)\n", offset + 21);
+               fprintf(arquivoIntermediario, "(STOREREG,$t14,%d,-)\n", offset + 22);
+               fprintf(arquivoIntermediario, "(STOREREG,$t15,%d,-)\n", offset + 23);
+               fprintf(arquivoIntermediario, "(STOREREG,$t16,%d,-)\n", offset + 24);
+               fprintf(arquivoIntermediario, "(STOREREG,$t17,%d,-)\n", offset + 25);
+               fprintf(arquivoIntermediario, "(STOREREG,$so1,%d,-)\n", offset + 27);
+               fprintf(arquivoIntermediario, "(STOREREG,$fp,%d,-)\n", offset + 28);
+               fprintf(arquivoIntermediario, "(STOREREG,$ra,%d,-)\n", offset + 29);
+               fprintf(arquivoIntermediario, "(STOREREG,$v0,%d,-)\n", offset + 30);
+               fprintf(arquivoIntermediario, "(STOREREG,$sp,%d,-)\n", offset + 31);
+            }
+            nextSibling = 1;
+            temporario--;
+
+         } else if (strcmp(no->attr.name, "changeContext") == 0){
+            if (no->child[0] != NULL){
+               param = analyzeNodeCall(no->child[0]);
+               if(no->child[0]->attr.val == 0){
+                  offset = 250;
+               } else {
+                  offset = 250 + (no->child[0]->attr.val * 200);
+               }
+               fprintf(arquivoIntermediario, "(LOADREG,$zero,%d,-)\n", offset);
+               fprintf(arquivoIntermediario, "(LOADREG,$r0,%d,-)\n", offset + 1);
+               fprintf(arquivoIntermediario, "(LOADREG,$a0,%d,-)\n", offset + 2);
+               fprintf(arquivoIntermediario, "(LOADREG,$a1,%d,-)\n", offset + 3);
+               fprintf(arquivoIntermediario, "(LOADREG,$a2,%d,-)\n", offset + 4);
+               fprintf(arquivoIntermediario, "(LOADREG,$a3,%d,-)\n", offset + 5);
+               fprintf(arquivoIntermediario, "(LOADREG,$a4,%d,-)\n", offset + 6);
+               fprintf(arquivoIntermediario, "(LOADREG,$a5,%d,-)\n", offset + 7);
+               fprintf(arquivoIntermediario, "(LOADREG,$t0,%d,-)\n", offset + 8);
+               fprintf(arquivoIntermediario, "(LOADREG,$t1,%d,-)\n", offset + 9);
+               fprintf(arquivoIntermediario, "(LOADREG,$t2,%d,-)\n", offset + 10);
+               fprintf(arquivoIntermediario, "(LOADREG,$t3,%d,-)\n", offset + 11);
+               fprintf(arquivoIntermediario, "(LOADREG,$t4,%d,-)\n", offset + 12);
+               fprintf(arquivoIntermediario, "(LOADREG,$t5,%d,-)\n", offset + 13);
+               fprintf(arquivoIntermediario, "(LOADREG,$t6,%d,-)\n", offset + 14);
+               fprintf(arquivoIntermediario, "(LOADREG,$t7,%d,-)\n", offset + 15);
+               fprintf(arquivoIntermediario, "(LOADREG,$t8,%d,-)\n", offset + 16);
+               fprintf(arquivoIntermediario, "(LOADREG,$t9,%d,-)\n", offset + 17);
+               fprintf(arquivoIntermediario, "(LOADREG,$t10,%d,-)\n", offset + 18);
+               fprintf(arquivoIntermediario, "(LOADREG,$t11,%d,-)\n", offset + 19);
+               fprintf(arquivoIntermediario, "(LOADREG,$t12,%d,-)\n", offset + 20);
+               fprintf(arquivoIntermediario, "(LOADREG,$t13,%d,-)\n", offset + 21);
+               fprintf(arquivoIntermediario, "(LOADREG,$t14,%d,-)\n", offset + 22);
+               fprintf(arquivoIntermediario, "(LOADREG,$t15,%d,-)\n", offset + 23);
+               fprintf(arquivoIntermediario, "(LOADREG,$t16,%d,-)\n", offset + 24);
+               fprintf(arquivoIntermediario, "(LOADREG,$t17,%d,-)\n", offset + 25);
+               fprintf(arquivoIntermediario, "(LOADREG,$so1,%d,-)\n", offset + 27);
+               fprintf(arquivoIntermediario, "(LOADREG,$fp,%d,-)\n", offset + 28);
+               fprintf(arquivoIntermediario, "(LOADREG,$ra,%d,-)\n", offset + 29);
+               fprintf(arquivoIntermediario, "(LOADREG,$v0,%d,-)\n", offset + 30);
+               fprintf(arquivoIntermediario, "(LOADREG,$sp,%d,-)\n", offset + 31);
+            }
+            nextSibling = 1;
+            temporario--;
+
          } else {
             if (no->child[0] != NULL){
 
@@ -246,10 +342,11 @@ static int generateStmt(TreeNode *no){
             } else if (strcmp(no->attr.name, "execPID") == 0){
                printf("(SO_SAVE,$zero,-,$so0)\n");
                fprintf(arquivoIntermediario, "(SO_SAVE,$so0)\n");
-               printf("(LI,$so1,800,-)\n");
-               fprintf(arquivoIntermediario, "(LI,$so1,800,-)\n");
                printf("(JUMP_REG,$so1,-,-)\n");
                fprintf(arquivoIntermediario, "(JUMP_REG,$so1,-,-)\n");
+            } else if (strcmp(no->attr.name, "temporizador") == 0){
+               printf("(TEMP,-,-,-)\n");
+               fprintf(arquivoIntermediario, "(TEMP,-,-,-)\n");
             } else {
                printf("(CALL,$t%d,%s,%d)\n", temporario, name, cont);
                fprintf(arquivoIntermediario, "(CALL,$t%d,%s,%d)\n", temporario, name, cont);
@@ -472,12 +569,18 @@ int analyzeNodeCall(TreeNode *no){
 
 void geraIntermediario(TreeNode *no){
 
-   fprintf(arquivoIntermediario, "(LI,$r0,150,-)\n");
-   fprintf(arquivoIntermediario, "(LI,$sp,200,-)\n");
+   fprintf(arquivoIntermediario, "(LI,$r0,%d,-)\n", 150 + (PID * 200));
+   fprintf(arquivoIntermediario, "(LI,$sp,%d,-)\n", 200 + (PID * 200));
    fprintf(arquivoIntermediario, "(JUMP_FUNC,main,-,-)\n");
    
    analyzeNode(no);
    
+   // adicionar 1 para um resgistrador
+   // dar um load na posição 10 + i da memoria
+   fprintf(arquivoIntermediario, "(LI,$t0,1,-)\n");
+   fprintf(arquivoIntermediario, "(LOAD_END,$t1,RR,-)\n");
+   fprintf(arquivoIntermediario, "(STORE_END,$t0,Success,$t1)\n");
+   fprintf(arquivoIntermediario, "(RESETREG,-,-,-)\n");
    fprintf(arquivoIntermediario, "(HALT,-,-,-)\n");
 
    for(int i = 0; i <= recursivas->posicao; i++){

@@ -43,6 +43,7 @@ void labels(){
                j++;
             }
     
+            //sprintf(aux, "%d", posicaoLabel[j].posicao + 3001);
             sprintf(aux, "%d", posicaoLabel[j].posicao);
             strcpy(instrucao[i].reg1, aux);
 
@@ -257,6 +258,7 @@ void label(char *linha, int indice){
     }
     registrador[j] = '\0';
 
+    //posicaoRetornoLabel[atoi(registrador)] = linhaAtual + 3001;
     posicaoRetornoLabel[atoi(registrador)] = linhaAtual;
 
     indice = parametro(linha, indice);
@@ -845,6 +847,71 @@ void resetReg(char *linha, int indice){
     strcpy(instrucao[linhaAtual].instruc, "resetReg");
 }
 
+void temporizador(char *linha, int indice){
+    strcpy(instrucao[linhaAtual].instruc, "temp");
+}
+
+void loadEND(char *linha, int indice){
+    strcpy(instrucao[linhaAtual].instruc, "lw");
+
+    indice = parametro(linha, indice);
+
+    char aux[10];
+    sprintf(aux, "$%d,", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].reg1, aux);
+
+    indice = parametro(linha, indice);
+
+    int pos;
+
+    if (strcmp(registrador, "0") == 0){
+        pos = 0;
+    } else {
+        pos = busca_indice(registrador, function, "var");
+        if (pos == -1){
+            pos = busca_indice(registrador, "Global", "var");
+        }
+    }
+    sprintf(aux, "%d", pos);
+    strcpy(instrucao[linhaAtual].reg2, "52");
+
+    ultimo_parametro(linha, indice);
+
+    sprintf(aux, "($%d)", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].regD, aux);
+}
+
+void storeEND(char *linha, int indice){
+
+    strcpy(instrucao[linhaAtual].instruc, "sw");
+
+    indice = parametro(linha, indice);
+
+    char aux[10];
+    sprintf(aux, "$%d,", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].reg1, aux);
+
+    indice = parametro(linha, indice);
+    int pos;
+
+    if (strcmp(registrador, "0") == 0){
+        pos = 0;
+    } else {
+        pos = busca_indice(registrador, function, "var");
+        if (pos == -1){
+            pos = busca_indice(registrador, "Global", "var");
+        }
+    }
+
+    sprintf(aux, "%d", pos);
+    strcpy(instrucao[linhaAtual].reg2, "10");
+
+    ultimo_parametro(linha, indice);
+
+    sprintf(aux, "($%d)", buscaValorEnderecoRegistrador(registrador));
+    strcpy(instrucao[linhaAtual].regD, aux);
+}
+
 void escreveNoArquivo(){
     for (int i = 1; i < linhaAtual; i++){
         fprintf(arquivoAssembly, "%s %s%s%s", instrucao[i].instruc, instrucao[i].reg1, instrucao[i].reg2, instrucao[i].regD);
@@ -990,7 +1057,7 @@ void nome_instrucao(char *read){
 
     } else if (strcmp(instruc, "SO_SAVE") == 0){
         SO_SAVE(read, i);
-
+    
     } else if (strcmp(instruc, "STOREREG") == 0){
         storeReg(read, i);
 
@@ -999,6 +1066,15 @@ void nome_instrucao(char *read){
 
     } else if (strcmp(instruc, "RESETREG") == 0){
         resetReg(read, i);
+
+    } else if (strcmp(instruc, "TEMP") == 0){
+        temporizador(read, i);
+    
+    } else if (strcmp(instruc, "LOAD_END") == 0){
+        loadEND(read, i);
+    
+    } else if (strcmp(instruc, "STORE_END") == 0){
+        storeEND(read, i);
 
     } else {
         strcpy(instrucao[linhaAtual].instruc, instruc);

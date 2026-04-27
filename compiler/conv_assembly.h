@@ -2,7 +2,7 @@
 #define _ASSEMBLY_H_
 
 typedef struct{
-    char instruc[6];
+    char instruc[10];
     char reg1[10];
     char reg2[10];
     char regD[10];

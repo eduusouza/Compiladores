@@ -407,12 +407,17 @@ void instrucaoSOSave(char *valorLinha, int valorIndice)
     valorIndice = buscaRegistrador(valorLinha, valorIndice);
     valorR1 = atoi(registradores);
 
-    fprintf(arquivoBinario, "Memoria[%d] = {6'd2, 5'd0, 5'd%d, 16'd%d}; // addi\n", linhaAtual, valorR1, linhaAtual + 3);
+    fprintf(arquivoBinario, "Memoria[%d] = {6'd2, 5'd0, 5'd%d, 16'd%d}; // addi\n", linhaAtual, valorR1, linhaAtual + 2);
 }
 
 void instrucaoRESETREG(char *valorLinha, int valorIndice)
 {
     fprintf(arquivoBinario, "Memoria[%d] = {6'd22, 26'd0}; // resetReg\n", linhaAtual);
+}
+
+void instrucaoTEMP(char *valorLinha, int valorIndice)
+{
+    fprintf(arquivoBinario, "Memoria[%d] = {6'd23, 26'd0}; // temp\n", linhaAtual);
 }
 
 void instrucoesBinarias(char *valorLinha)
@@ -529,6 +534,9 @@ void instrucoesBinarias(char *valorLinha)
     }
     else if (strcmp(instrucao, "resetReg") == 0){
         instrucaoRESETREG(valorLinha, valorIndice);
+    }
+    else if (strcmp(instrucao, "temp") == 0){
+        instrucaoTEMP(valorLinha, valorIndice);
     }
 }
 
